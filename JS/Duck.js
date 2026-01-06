@@ -49,11 +49,11 @@ class Duck{
             this.isAlive = false;
             let this_ = this;
             this.stopFlightAnimation();
-            $(this.duckId).css("background-image", "url(../resources/sprites/duck/hit.png)")
+            $(this.duckId).css("background-image", "url(resources/sprites/duck/hit.png)")
 
             setTimeout(function(){
                 $(this_.duckId)
-                    .css("background-image", "url(../resources/sprites/duck/falling.gif)")
+                    .css("background-image", "url(resources/sprites/duck/falling.gif)")
                     .animate({bottom: `10%`,}, 650);
             },150);
     }
@@ -73,25 +73,25 @@ class Duck{
     changeDuckBackground(destWidth, destHeight){
         if (destWidth > this.currentWidth) {
             $(this.duckId)
-            .css("background-image", "url(../resources/sprites/duck/flyright.gif)");
+            .css("background-image", "url(resources/sprites/duck/flyright.gif)");
             if(destHeight - this.currentHeight > 20){
                 $(this.duckId)
-                .css("background-image", "url(../resources/sprites/duck/flyrightup.gif)");}
+                .css("background-image", "url(resources/sprites/duck/flyrightup.gif)");}
             if(destHeight - this.currentHeight < -20){
                 $(this.duckId)
-                .css("background-image", "url(../resources/sprites/duck/flyrightdown.gif)");
+                .css("background-image", "url(resources/sprites/duck/flyrightdown.gif)");
             
             }
         } else {
             $(this.duckId)
-            .css("background-image", "url(../resources/sprites/duck/flyleft.gif)");
+            .css("background-image", "url(resources/sprites/duck/flyleft.gif)");
 
             if(destHeight - this.currentHeight > 20){
                 $(this.duckId)
-                .css("background-image", "url(../resources/sprites/duck/flyleftup.gif)");}
+                .css("background-image", "url(resources/sprites/duck/flyleftup.gif)");}
             if(destHeight - this.currentHeight < -20){
                 $(this.duckId)
-                .css("background-image", "url(../resources/sprites/duck/flyleftdown.gif)");
+                .css("background-image", "url(resources/sprites/duck/flyleftdown.gif)");
             }
         }
     }
