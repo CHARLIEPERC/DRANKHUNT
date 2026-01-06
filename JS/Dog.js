@@ -5,10 +5,10 @@ class Dog{
     }
 
     launchWalkoutAnimation(){
-        let walkBackground = "url(../resources/sprites/dog/dogeWalking.gif)";
-        let sniffBackground = "url(../resources/sprites/dog/snif.gif)";
-        let stopBackground = "url(../resources/sprites/dog/found.png)";
-        let jumpBackground = "url(../resources/sprites/dog/pawelJumper.gif)";
+        let walkBackground = "url(resources/sprites/dog/dogeWalking.gif)";
+        let sniffBackground = "url(resources/sprites/dog/snif.gif)";
+        let stopBackground = "url(resources/sprites/dog/found.png)";
+        let jumpBackground = "url(resources/sprites/dog/pawelJumper.gif)";
 
         $(this.dogId)
         .animate({left: "20%",}, 2000 ,function(){
@@ -36,11 +36,11 @@ class Dog{
     showDogWithKilledDucks(killedDucks) {
     
         if (killedDucks == 0) {
-            $(this.dogId).css("backgroundImage" ,'url(../resources/sprites/dog/bk.gif)');
+            $(this.dogId).css("backgroundImage" ,'url(resources/sprites/dog/bk.gif)');
         } else if(killedDucks == 1) {
-            $(this.dogId).css("backgroundImage" ,'url(../resources/sprites/dog/gotOne.png)');
+            $(this.dogId).css("backgroundImage" ,'url(resources/sprites/dog/gotOne.png)');
         } else{
-            $(this.dogId).css("backgroundImage" ,'url(../resources/sprites/dog/gotTwo.png)');
+            $(this.dogId).css("backgroundImage" ,'url(resources/sprites/dog/gotTwo.png)');
         }
 
         $(this.dogId)
