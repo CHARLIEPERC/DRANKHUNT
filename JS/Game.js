@@ -102,7 +102,7 @@ class ExtremeGame extends Game{
         $(".sky").css("backgroundImage", "url(../resources/sprites/background/sky3.png)");
         $(".sky").mousedown(()=>this.startAutoShooting(event));
         $(".sky").mouseup(()=>this.stopAutoShooting(event));
-        $("#gunIcon").attr("src", "../resources/sprites/weapons/auto.png");
+        $("#gunIcon").attr("src", "resources/sprites/weapons/auto.png");
     }
 
     saveCurrentCoordinates(){
@@ -160,10 +160,10 @@ class ModernGame extends Game{
     }
 
     changeBackgroudsForCurrentMode(){
-        $(".sky").css("backgroundImage", "url(../resources/sprites/background/modern.png)");
-        $(".bushes").css("backgroundImage", "url(../resources/sprites/background/bushes.png)");
+        $(".sky").css("backgroundImage", "url(resources/sprites/background/modern.png)");
+        $(".bushes").css("backgroundImage", "url(resources/sprites/background/bushes.png)");
         $("#sky").click(this.shoot.bind(this));
-        $("#gunIcon").attr("src", "../resources/sprites/weapons/shotgun.png");
+        $("#gunIcon").attr("src", "resources/sprites/weapons/shotgun.png");
     }
 }
 
@@ -175,7 +175,7 @@ class ClassicGame extends Game{
     }
 
     changeBackgroudsForCurrentMode(){
-        $(".sky").css("backgroundImage", "url(../resources/sprites/background/sky1.png)");
+        $(".sky").css("backgroundImage", "url(resources/sprites/background/sky1.png)");
         $("#sky").click(this.shoot.bind(this));
     }
 }
