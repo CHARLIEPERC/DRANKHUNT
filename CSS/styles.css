@@ -1,6 +1,6 @@
 @font-face {
     font-family: asset;
-    src: url('../resources/fonts/Asset/Asset-Regular.ttf');
+    src: url('resources/fonts/Asset/Asset-Regular.ttf');
 }
 
 h3{
@@ -17,11 +17,11 @@ body{
     margin: 0;
     font-family: 'Asset', cursive;
     user-select: none;
-    content: url("../resources/sprites/duck/hit.png") url("../resources/sprites/duck/flyrightup.gif") url("../resources/sprites/duck/flyrightdown.gif") url("../resources/sprites/duck/flyleftup.gif") url("../resources/sprites/duck/flyleftdown.gif") url("../resources/sprites/duck/flyright.gif") url("../resources/sprites/duck/flyleft.gif") url("../resources/sprites/duck/falling.gif") ;
+    content: url("resources/sprites/duck/hit.png") url("resources/sprites/duck/flyrightup.gif") url("resources/sprites/duck/flyrightdown.gif") url("resources/sprites/duck/flyleftup.gif") url("resources/sprites/duck/flyleftdown.gif") url("resources/sprites/duck/flyright.gif") url("resources/sprites/duck/flyleft.gif") url("resources/sprites/duck/falling.gif") ;
 }
 
 .sky { 
-    background-image: url("../resources/sprites/background/sky1.png");
+    background-image: url("resources/sprites/background/sky1.png");
     height: 100%; 
     background-position: center;
     background-repeat: no-repeat;
@@ -34,7 +34,7 @@ body{
     z-index: 1;
     position: relative;
     height: 100%; 
-    background-image: url("../resources/sprites/background/bushes.png");
+    background-image: url("resources/sprites/background/bushes.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
@@ -42,7 +42,7 @@ body{
 .duck{
     left: 48%;
     bottom: 20%;
-    background-image: url("../resources/sprites/duck/flyleft.gif");
+    background-image: url("resources/sprites/duck/flyleft.gif");
     position: absolute;
     animation-timing-function: linear;
     width: 78px;
@@ -62,11 +62,11 @@ body{
     z-index: 3;
     left: 0%;
     bottom: 20%;
-    background-image: url("../resources/sprites/dog/dogeWalking.gif");
+    background-image: url("resources/sprites/dog/dogeWalking.gif");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    content: url("../resources/sprites/dog/dogeWalking.gif") url("../resources/sprites/dog/snif.gif") url("../resources/sprites/dog/pawelJumper.gif");
+    content: url("resources/sprites/dog/dogeWalking.gif") url("resources/sprites/dog/snif.gif") url("resources/sprites/dog/pawelJumper.gif");
 }
 
 #dog2{
@@ -74,7 +74,7 @@ body{
     height: 8vw;
     left: 48%;
     bottom: 10%;
-    content: url("../resources/sprites/dog/gotOne.png") url("../resources/sprites/dog/gotTwo.png") url("../resources/sprites/dog/bk.gif");
+    content: url("resources/sprites/dog/gotOne.png") url("resources/sprites/dog/gotTwo.png") url("resources/sprites/dog/bk.gif");
 }
 
 .easingOut{
