@@ -99,7 +99,7 @@ class ExtremeGame extends Game{
     }
 
     initializeCurrentModeSettings(){
-        $(".sky").css("backgroundImage", "url(../resources/sprites/background/sky3.png)");
+        $(".sky").css("backgroundImage", "url(resources/sprites/background/sky3.png)");
         $(".sky").mousedown(()=>this.startAutoShooting(event));
         $(".sky").mouseup(()=>this.stopAutoShooting(event));
         $("#gunIcon").attr("src", "resources/sprites/weapons/auto.png");
