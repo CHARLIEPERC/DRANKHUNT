@@ -21,7 +21,7 @@ body{
 }
 
 .sky { 
-    background-image: url("resources/sprites/background/sky1.png");
+    background-image: url("../resources/sprites/background/sky1.png");
     height: 100%; 
     background-position: center;
     background-repeat: no-repeat;
@@ -34,7 +34,7 @@ body{
     z-index: 1;
     position: relative;
     height: 100%; 
-    background-image: url("resources/sprites/background/bushes.png");
+    background-image: url("../resources/sprites/background/bushes.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
