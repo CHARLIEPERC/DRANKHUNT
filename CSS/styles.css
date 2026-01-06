@@ -17,7 +17,7 @@ body{
     margin: 0;
     font-family: 'Asset', cursive;
     user-select: none;
-    content: url("../resources/sprites/duck/hit.png") url("../resources/sprites/duck/flyrightup.gif") url("../resources/sprites/duck/flyrightdown.gif") url("../resources/sprites/duck/flyleftup.gif") url("../resources/sprites/duck/flyleftdown.gif") url("../resources/sprites/duck/flyright.gif") url("../resources/sprites/duck/flyleft.gif") url("../resources/sprites/duck/falling.gif") ;
+    content: url("../resources/sprites/duck/hit.png") url("../resources/sprites/duck/flyrightup.png") url("../resources/sprites/duck/flyrightdown.png") url("../resources/sprites/duck/flyleftup.png") url("../resources/sprites/duck/flyleftdown.gif") url("../resources/sprites/duck/flyright.png") url("../resources/sprites/duck/flyleft.png") url("../resources/sprites/duck/falling.png") ;
 }
 
 .sky { 
@@ -42,7 +42,7 @@ body{
 .duck{
     left: 48%;
     bottom: 20%;
-    background-image: url("../resources/sprites/duck/flyleft.gif");
+    background-image: url("../resources/sprites/duck/flyleft.png");
     position: absolute;
     animation-timing-function: linear;
     width: 78px;
@@ -62,7 +62,7 @@ body{
     z-index: 3;
     left: 0%;
     bottom: 20%;
-    background-image: url("../resources/sprites/dog/dogeWalking.gif");
+    background-image: url("../resources/sprites/dog/dogeWalking.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
