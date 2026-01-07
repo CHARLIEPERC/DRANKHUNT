@@ -13,6 +13,7 @@ class Game{
         this.newRoundTimeout;
         this.totalSuccessfulHits = 0;
         this.totalShotsNumber = 0;
+        this.maxLevel = 10;
     }
 
     startGame(){
@@ -45,8 +46,18 @@ class Game{
         this.shotHandler.disablehooting();
         this.ducksHandler.removeRemainingDucks();
         this.dog2.showDogWithKilledDucks(this.ducksHandler.ducksKilledInRound);
-        this.newRoundTimeout = setTimeout(() => this.startNewRound(), 2000);        
         this.checkIfRoundIsPassed();
+
+        if (this.lives < 1) {
+            return;
+        }
+
+        if (this.pointsHandler.level >= this.maxLevel) {
+            this.finishWin();
+            return;
+        }
+
+        this.newRoundTimeout = setTimeout(() => this.startNewRound(), 2000);
     }
 
     checkIfRoundIsPassed(){
@@ -65,6 +76,12 @@ class Game{
         window.clearTimeout(this.newRoundTimeout);
         let accuracy = Math.round(this.totalSuccessfulHits/this.totalShotsNumber*100);
         displayEndScreen(this.pointsHandler, this.totalSuccessfulHits, accuracy);
+    }
+
+    finishWin(){
+        window.clearTimeout(this.newRoundTimeout);
+        this.shotHandler.disablehooting();
+        displayWinScreen();
     }
     
     startNewRound(){
@@ -99,10 +116,10 @@ class ExtremeGame extends Game{
     }
 
     initializeCurrentModeSettings(){
-        $(".sky").css("backgroundImage", "url(resources/sprites/background/sky3.png)");
+        $(".sky").css("backgroundImage", "url(/DRANKHUNT/resources/sprites/background/sky3.png)");
         $(".sky").mousedown(()=>this.startAutoShooting(event));
         $(".sky").mouseup(()=>this.stopAutoShooting(event));
-        $("#gunIcon").attr("src", "resources/sprites/weapons/auto.png");
+        $("#gunIcon").attr("src", "/DRANKHUNT/resources/sprites/weapons/auto.png");
     }
 
     saveCurrentCoordinates(){
@@ -160,10 +177,10 @@ class ModernGame extends Game{
     }
 
     changeBackgroudsForCurrentMode(){
-        $(".sky").css("backgroundImage", "url(resources/sprites/background/modern.png)");
-        $(".bushes").css("backgroundImage", "url(resources/sprites/background/bushes.png)");
+        $(".sky").css("backgroundImage", "url(/DRANKHUNT/resources/sprites/background/modern.png)");
+        $(".bushes").css("backgroundImage", "url(/DRANKHUNT/resources/sprites/background/bushes.png)");
         $("#sky").click(this.shoot.bind(this));
-        $("#gunIcon").attr("src", "resources/sprites/weapons/shotgun.png");
+        $("#gunIcon").attr("src", "/DRANKHUNT/resources/sprites/weapons/shotgun.png");
     }
 }
 
@@ -175,7 +192,7 @@ class ClassicGame extends Game{
     }
 
     changeBackgroudsForCurrentMode(){
-        $(".sky").css("backgroundImage", "url(resources/sprites/background/sky1.png)");
+        $(".sky").css("backgroundImage", "url(/DRANKHUNT/resources/sprites/background/sky1.png)");
         $("#sky").click(this.shoot.bind(this));
     }
 }
