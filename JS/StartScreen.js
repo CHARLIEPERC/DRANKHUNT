@@ -3,6 +3,9 @@ class StartScreen{
     constructor(){
         this.availableModes = new Array();
         this.currentModeIndex = 0;
+        this.menuMusic = new Audio("/DRANKHUNT/resources/sounds/menu.mp3");
+        this.menuMusic.loop = true;
+        this.menuMusic.volume = 0.3;
         this.initializeModes();
         this.initializeButtons();
         this.displaySettingsForCurrentMode();
@@ -51,5 +54,14 @@ class StartScreen{
 
     hideStartScreen(){
         document.getElementById("startScreen").style.display = "none";
+    }
+
+    playMenuMusic(){
+        this.menuMusic.play().catch(()=>{});
+    }
+
+    stopMenuMusic(){
+        this.menuMusic.pause();
+        this.menuMusic.currentTime = 0;
     }
 }
