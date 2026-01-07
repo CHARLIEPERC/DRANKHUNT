@@ -42,7 +42,9 @@ function displayEndScreen(pointsHandler, totalSuccessfulHits, accuracy){
 }
 
 function displayWinScreen(){
-    $("#winOverlay").show();
+    // Use the CSS-driven fullscreen centering by toggling the is-open class.
+    // This avoids jQuery's .show() which sets display:block and would defeat flex centering.
+    $("#winOverlay").addClass("is-open");
 }
 
 function disableLifeIcon(lifeNumber){
