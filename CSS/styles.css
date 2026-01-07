@@ -11,7 +11,7 @@
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden; /* prevent page scrolling on iOS */
   background: #7fb0ff; /* neutral fallback outside gameWrap */
 }
 
@@ -21,6 +21,7 @@ body{
   user-select: none;
 }
 
+/* Keep the design wrapper unchanged (no scale added) */
 #gameWrap {
   width: 390px;
   height: 844px;
@@ -56,18 +57,20 @@ body{
   z-index: 5;
 }
 
+/* Keep pixel-art crisp */
 #gameWrap, #gameWrap * {
   image-rendering: pixelated;
   -webkit-font-smoothing: none;
 }
 
+/* FOREGROUND (bushes/grass) — ground reference */
 .bushes{
     z-index: 2;
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: var(--fg-h);
+    height: var(--fg-h); /* default desktop px baseline */
     background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
     background-size: 100% var(--fg-h);
     background-position: bottom center;
@@ -75,9 +78,10 @@ body{
     image-rendering: pixelated;
 }
 
+/* DUCK: anchored relative to the ground (foreground) — original baseline restored */
 .duck{
     left: 48%;
-    bottom: calc(var(--fg-h) + var(--duck-elev));
+    bottom: calc(var(--fg-h) + var(--duck-elev)); /* original baseline: top of grass + elevation */
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
@@ -86,6 +90,7 @@ body{
     background-size: 100%;
 }
 
+/* DOG: anchored relative to the ground (foreground) — original baseline restored */
 .dog{
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -97,7 +102,7 @@ body{
     height: var(--dog-h);
     z-index: 3;
     left: 20px;
-    bottom: calc(var(--fg-h));
+    bottom: calc(var(--fg-h)); /* original baseline: top of grass */
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -109,7 +114,7 @@ body{
     width: var(--dog-w);
     height: var(--dog-h);
     left: 180px;
-    bottom: calc(var(--fg-h));
+    bottom: calc(var(--fg-h)); /* original baseline: top of grass */
 }
 
 #pointsCounter{
@@ -134,9 +139,28 @@ body{
     -webkit-transform: translateY(-50%);
 }
 
-/* Small visual tweaks: ensure bushes 30vh on small screens and slightly raise sprites */
+/* Minimal mobile adjustments only (strict, per your request):
+   - Keep the original visual system (no JS scaling, no new transform: scale, no math-heavy viewport calculations).
+   - Make the ground visually larger (30vh) on small screens and keep it pinned to bottom.
+   - Slightly raise duck and dog on small screens so they sit on the grass visually.
+*/
 @media (max-width: 499px) {
-  .bushes { height: 30vh; background-size: 100% 30vh; }
-  .duck { bottom: calc(var(--fg-h) + var(--duck-elev) + 18px); }
-  #dog1, #dog2 { bottom: calc(var(--fg-h) + 12px); }
+  /* Make bushes/grass exactly 30vh on small screens, pinned to bottom */
+  .bushes {
+    height: 30vh;
+    background-size: 100% 30vh;
+  }
+
+  /* Raise duck by +18px on small screens to sit visually on the grass */
+  .duck {
+    bottom: calc(var(--fg-h) + var(--duck-elev) + 18px);
+  }
+
+  /* Raise dogs by +12px on small screens to sit visually on the grass */
+  #dog1,
+  #dog2 {
+    bottom: calc(var(--fg-h) + 12px);
+  }
 }
+
+/* keep the rest of the CSS in place (bar.css handles HUD specifics) */
