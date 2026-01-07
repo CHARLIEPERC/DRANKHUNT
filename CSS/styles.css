@@ -1,40 +1,39 @@
 html,
 body{
-    height: 100vh;
+    height: 100%; /* use 100% and prevent vertical scroll */
     margin: 0;
+    overflow: hidden; /* hard requirement: no vertical scrolling */
     background-image: url("/DRANKHUNT/resources/sprites/background/sky1.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-h3{
-    color: white;
-}
-
-h2{
-    color: white;
-}
-
-
+/* ensure body uses stable mobile viewport height unit */
 body{
-    min-height: 100%;
+    min-height: 100svh; /* use svh for mobile stability */
     font-family: Arial, sans-serif;
     user-select: none;
-    content: url("/DRANKHUNT/resources/sprites/duck/png/hit.png") url("/DRANKHUNT/resources/sprites/duck/png/rightup1.png") url("/DRANKHUNT/resources/sprites/duck/png/rightdown1.png") url("/DRANKHUNT/resources/sprites/duck/png/right1.png") url("/DRANKHUNT/resources/sprites/duck/png/right2.png") url("/DRANKHUNT/resources/sprites/duck/png/right3.png") url("/DRANKHUNT/resources/sprites/duck/png/left1.png") url("/DRANKHUNT/resources/sprites/duck/png/left2.png") url("/DRANKHUNT/resources/sprites/duck/png/left3.png");
+    /* preload ducks (keeps previous content rule but removed content: as it's unnecessary here) */
+}
+
+/* global pixel-art rendering */
+#gameWrap, #gameWrap * {
+    image-rendering: pixelated;
+    -webkit-font-smoothing: none;
+    -webkit-transform-origin: 0 0;
 }
 
 .sky {
     position: relative;
     background-image: none;
-    min-height: 100vh;
+    min-height: 100%; /* make sky fill the fixed-game container */
     width: 100%;
     background-color: transparent;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     cursor: crosshair;
-    
 }
 
 
@@ -44,12 +43,12 @@ body{
     bottom: 0;
     left: 0;
     width: 100%;
-    /* allow bushes to be taller (about 25-35vh) while keeping them pinned to bottom */
-    min-height: 25vh;
-    max-height: 35vh;
+    /* allow bushes to be taller (about 25-35% of game design height) while keeping them pinned to bottom */
+    min-height: 25%;
+    max-height: 35%;
     height: auto;
     background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
-    /* scale to full width so the foreground spans entire viewport */
+    /* scale to full width so the foreground spans entire game width */
     background-size: 100% auto;
     background-position: bottom center;
     background-repeat: repeat-x;
@@ -63,7 +62,7 @@ body{
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
-    width: 78px;
+    width: 78px; /* fixed px to ensure consistent design resolution */
     height: 73px;
     background-size: 100%;
 }
@@ -75,8 +74,8 @@ body{
 }
 
 #dog1{
-    width: 10vw;
-    height: 6vw;
+    width: 39px; /* design pixel sizes (approx 10vw at 390px design width) */
+    height: 34px; /* match aspect */
     z-index: 3;
     left: 0%;
     bottom: 20%;
@@ -88,90 +87,8 @@ body{
 }
 
 #dog2{
-    width: 10vw;
-    height: 8vw;
+    width: 39px;
+    height: 45px;
     left: 48%;
     bottom: 10%;
-    content: url("/DRANKHUNT/resources/sprites/dog/gotOne.png") url("/DRANKHUNT/resources/sprites/dog/gotTwo.png") url("/DRANKHUNT/resources/sprites/dog/bkztypa1.png");
-}
-
-.easingOut{
-    animation-name: dog2Show;
-    animation-duration: 2s;
-    animation-iteration-count: 1;
-    animation-timing-function: linear;
-}
-
-.comboMessage{
-    display: none;
-    z-index: 7;
-    position: absolute;
-    top: 15%;
-    left: 15%;
-    animation-name: flash;
-    animation-duration: 0.2s;
-    animation-iteration-count: infinite;
-}
-
-@keyframes flash {
-    0% {color: red}
-    100% {color: black}
-}
-
-/* @keyframes dog2Show{
-    0%  {left: 48%; bottom: 20%;}
-    20%  {left: 48%; bottom: 35%;}
-    80%  {left: 48%; bottom: 35%;}
-    100% {left: 48%; bottom: 20%;}
-}
-
-
-@keyframes dogWalk1 {
-    0%   {left:0%; bottom:20%;}
-    100% {left:20%; bottom:20%;}
-}
-
-@keyframes dogSniff1 {
-    0%   {left:20%; bottom:20%;}
-    100% {left:20%; bottom:20%;}
-}
-
-
-@keyframes dogWalk2 {
-    0%   {left:20%; bottom:20%;}
-    100% {left:40%; bottom:20%;}
-}
-
-@keyframes dogSniff2 {
-    0%   {left:40%; bottom:20%;}
-    100% {left:40%; bottom:20%;}
-} */
-
-
-/* 0.7 */
-@keyframes dogJump {
-    0%  {left:45%; bottom:20%;}
-    25%  {left:45%; bottom:25%;}
-    50%  {left:47%; bottom:30%;}
-    75%  {left:50%; bottom:35%;}
-    100% {left:52%; bottom:32%;}
-}
-.winOverlay{
-    /* keep class harmless in case referenced elsewhere */
-}
-
-#winOverlay{
-    /* target the actual element in index.html (id="winOverlay") */
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.85);
-    z-index: 9999;
-    text-align: center;
-    display: none; /* hidden until win triggers */
-    align-items: center;
-    justify-content: center;
-}
-
-#winOverlay.is-open{
-    display: flex;
 }
