@@ -1,8 +1,8 @@
 :root {
   --fg-h: 340px; /* foreground height */
-  --duck-w: 120px;
-  --duck-h: 110px;
-  --duck-elev: 40px; /* how much higher than ground the duck flies */
+  --duck-w: 90px;
+  --duck-h: 80px;
+  --duck-elev: 80px; /* how much higher than ground the duck flies */
   --dog-w: 60px;
   --dog-h: 56px;
   --hud-h: 86px;
@@ -77,7 +77,7 @@ body{
 
 .duck{
     left: 48%;
-    bottom: calc(var(--fg-h) - var(--duck-h) + var(--duck-elev));
+    bottom: calc(var(--fg-h) + var(--duck-elev));
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
@@ -97,7 +97,7 @@ body{
     height: var(--dog-h);
     z-index: 3;
     left: 20px;
-    bottom: calc(var(--fg-h) - var(--dog-h));
+    bottom: calc(var(--fg-h));
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -109,7 +109,7 @@ body{
     width: var(--dog-w);
     height: var(--dog-h);
     left: 180px;
-    bottom: calc(var(--fg-h) - var(--dog-h));
+    bottom: calc(var(--fg-h));
 }
 
 #pointsCounter{
