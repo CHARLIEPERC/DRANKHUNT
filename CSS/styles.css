@@ -1,137 +1,176 @@
 :root {
-  --fg-h: 340px; /* foreground height */
-  --duck-w: 90px;
+  /* base (desktop) values — these will be updated by JS/Scale.js at runtime */
+  --fg-h: 340px;         /* fallback foreground height */
+  --duck-w: 90px;        /* fallback duck size */
   --duck-h: 80px;
-  --duck-elev: 80px; /* how much higher than ground the duck flies */
+  --duck-elev: 80px;
   --dog-w: 60px;
   --dog-h: 56px;
   --hud-h: 86px;
+  --game-scale: 1;       /* computed by JS, default 1 */
 }
 
+/* prevent page scrolling and keep stable viewport */
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden;
-  background: #7fb0ff; /* neutral fallback outside gameWrap */
+  overflow: hidden; /* prevent page scroll */
+  background: #7fb0ff;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
 }
 
-body{
+body {
   min-height: 100svh;
   font-family: Arial, sans-serif;
-  user-select: none;
 }
 
+/* GAME WRAPPER — fill viewport (no transform-scaling) */
 #gameWrap {
-  width: 390px;
-  height: 844px;
-  position: absolute;
-  left: 50%;
-  top: env(safe-area-inset-top, 0);
-  transform-origin: top left;
-  -webkit-transform-origin: 0 0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
   overflow: hidden;
   background: black;
   z-index: 1;
+  transform: none !important;
+  -webkit-transform: none !important;
+  -ms-transform: none !important;
 }
 
+/* sky: cover the wrapper area */
 #gameWrap .sky {
   position: relative;
+  width: 100%;
+  height: 100%;
   background-image: url("/DRANKHUNT/resources/sprites/background/sky1.png");
   background-size: cover;
-  background-position: center;
-  min-height: 100%;
-  width: 100%;
-  background-color: transparent;
+  background-position: center bottom;
   background-repeat: no-repeat;
   cursor: crosshair;
 }
 
-#winOverlay{
+/* win overlay hidden by default */
+#winOverlay {
   display: none;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: 5;
 }
 
+/* pixel-art rendering everywhere in the game area */
 #gameWrap, #gameWrap * {
   image-rendering: pixelated;
   -webkit-font-smoothing: none;
+  -webkit-font-smoothing: antialiased;
 }
 
-.bushes{
-    z-index: 2;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: var(--fg-h);
-    background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
-    background-size: 100% var(--fg-h);
-    background-position: bottom center;
-    background-repeat: repeat-x;
-    image-rendering: pixelated;
+/* FOREGROUND / BUSHES
+   - on desktop use px fallback (--fg-h)
+   - on small screens JS will set --fg-h to a vh-based value */
+.bushes {
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--fg-h);
+  background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
+  background-size: 100% var(--fg-h);
+  background-position: bottom center;
+  background-repeat: repeat-x;
+  image-rendering: pixelated;
 }
 
-.duck{
-    left: 48%;
-    bottom: calc(var(--fg-h) + var(--duck-elev));
-    background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
-    position: absolute;
-    animation-timing-function: linear;
-    width: var(--duck-w);
-    height: var(--duck-h);
-    background-size: 100%;
+/* SPRITES
+   Sizes are driven by CSS variables so JS can update them responsively. */
+.duck {
+  position: absolute;
+  left: 48%;
+  /* duck bottom is computed as (foreground top + elevation) via JS variables */
+  bottom: calc(var(--fg-h) + var(--duck-elev));
+  background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
+  animation-timing-function: linear;
+  width: var(--duck-w);
+  height: var(--duck-h);
+  background-size: 100% 100%;
+  image-rendering: pixelated;
 }
 
-.dog{
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    position: absolute;
+.dog {
+  position: absolute;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
-#dog1{
-    width: var(--dog-w);
-    height: var(--dog-h);
-    z-index: 3;
-    left: 20px;
-    bottom: calc(var(--fg-h));
-    background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
-    animation-duration: 0.7s;
-    animation-iteration-count: 1;
-    animation-timing-function: linear;
-    content: url("/DRANKHUNT/resources/sprites/dog/walk1.png") url("/DRANKHUNT/resources/sprites/dog/sniff1.png") url("/DRANKHUNT/resources/sprites/dog/jump1.png");
+#dog1, #dog2 {
+  width: var(--dog-w);
+  height: var(--dog-h);
+  bottom: calc(var(--fg-h));
+  image-rendering: pixelated;
 }
 
-#dog2{
-    width: var(--dog-w);
-    height: var(--dog-h);
-    left: 180px;
-    bottom: calc(var(--fg-h));
+#dog1 {
+  z-index: 3;
+  left: 20px;
+  background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
+  animation-duration: 0.7s;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
 }
 
-#pointsCounter{
-    text-align: right;
-    left: 28px;
-    bottom: calc(var(--fg-h) - 20px);
-    background-image: url("/DRANKHUNT/resources/sprites/scoreImages/round.png");
-    background-size: 100% 100%;
-    width: 120px;
-    height: 50px;
-    position: absolute;
-    z-index: 3;
+#dog2 {
+  left: 180px;
 }
 
-#levelCount{
-    margin: 0;
-    margin-right: 5%;
-    margin-left: 50%;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
+/* HUD / points counter kept inside wrapper and above grass */
+#pointsCounter {
+  position: absolute;
+  text-align: right;
+  left: 28px;
+  bottom: calc(var(--fg-h) - 20px);
+  width: 120px;
+  height: 50px;
+  background-image: url("/DRANKHUNT/resources/sprites/scoreImages/round.png");
+  background-size: 100% 100%;
+  z-index: 3;
 }
 
-/* keep the rest of the CSS in place (bar.css handles HUD specifics) */
+#levelCount {
+  margin: 0;
+  margin-right: 5%;
+  margin-left: 50%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+}
+
+/* Mobile-specific: use viewport-relative units for foreground and scale sprites ~1.5x */
+@media (max-width: 767px) {
+  /* raise the grass/trees area to about 30vh on phones */
+  .bushes {
+    height: 30vh;
+    background-size: 100% 30vh;
+  }
+
+  /* increase sprite sizes ~1.5x for visibility on phones */
+  .duck {
+    width: calc(var(--duck-w) * 1.5);
+    height: calc(var(--duck-h) * 1.5);
+  }
+
+  #dog1, #dog2 {
+    width: calc(var(--dog-w) * 1.5);
+    height: calc(var(--dog-h) * 1.5);
+  }
+
+  /* move the UI slightly higher so it doesn't overlap the tall foreground */
+  #pointsCounter {
+    bottom: calc(30vh - 20px);
+  }
+}
