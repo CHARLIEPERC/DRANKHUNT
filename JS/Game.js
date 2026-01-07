@@ -52,7 +52,7 @@ class Game{
             return;
         }
 
-        if (this.pointsHandler.level >= this.maxLevel) {
+        if (this.pointsHandler.level > this.maxLevel) {
             this.finishWin();
             return;
         }
@@ -79,8 +79,23 @@ class Game{
     }
 
     finishWin(){
+        // stop any pending new-round timer
         window.clearTimeout(this.newRoundTimeout);
+        // stop round end countdown (if running)
+        this.stopCountdownToRoundEnd();
+        // disable shooting input
         this.shotHandler.disablehooting();
+
+        // stop all ducks: clear their flight/frame timers and remove their DOM so movement/animation halts
+        if (this.ducksHandler && Array.isArray(this.ducksHandler.ducks)) {
+            this.ducksHandler.ducks.forEach(duck => {
+                try { if (duck.stopFlightAnimation) duck.stopFlightAnimation(); } catch(e){}
+                try { if (duck.stopFrameAnimation) duck.stopFrameAnimation(); } catch(e){}
+                try { if (duck.duckId) $(duck.duckId).remove(); } catch(e){}
+            });
+        }
+
+        // show win overlay (View.js will add class to make it fullscreen/flex)
         displayWinScreen();
     }
     
