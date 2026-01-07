@@ -7,7 +7,7 @@
     position: absolute;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 100dvh;
     z-index: 20;
     background-image: url("/DRANKHUNT/resources/sprites/background/startBackground.jpg");
     background-size: 100% 100%;
