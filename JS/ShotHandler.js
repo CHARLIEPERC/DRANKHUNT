@@ -3,7 +3,7 @@ class ShotHandler{
     constructor(initialAmmo){
         this.initialAmmo = initialAmmo;
         this.ammo = initialAmmo;
-        this.shoot = new Audio('resources/sounds/shoot.wav');
+        this.shoot = new Audio('/DRANKHUNT/resources/sounds/shoot.wav');
     }
 
     getAmmoNumber(){
@@ -78,4 +78,3 @@ class ShotHandler{
         $("#shootBlocker").show();
     }
 }
-
