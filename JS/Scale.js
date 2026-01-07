@@ -15,13 +15,18 @@
             vh = window.visualViewport.height;
         }
 
+        // compute scale to fit either width or height
         var scale = Math.min(vw / DESIGN_W, vh / DESIGN_H);
-        // ensure we never upscale past 1.5x to avoid blurry scaling on some devices (optional)
-        // scale = Math.min(scale, 2);
 
-        wrap.style.transform = 'scale(' + scale + ')';
-        wrap.style.webkitTransform = 'scale(' + scale + ')';
-        // keep wrapper at top-left and prevent page scrolling
+        // center horizontally: we set left 50% via CSS/JS and translateX(-50%) in transform
+        wrap.style.position = 'absolute';
+        wrap.style.left = '50%';
+        wrap.style.top = '0';
+
+        wrap.style.transform = 'translateX(-50%) scale(' + scale + ')';
+        wrap.style.webkitTransform = 'translateX(-50%) scale(' + scale + ')';
+
+        // ensure document heights remain fixed to avoid scrolling
         document.documentElement.style.height = '100%';
         document.body.style.height = '100%';
     }
