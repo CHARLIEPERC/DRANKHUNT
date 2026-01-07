@@ -74,17 +74,28 @@ class Dog {
       $(this.dogId).css("backgroundImage", 'url(/DRANKHUNT/resources/sprites/dog/gotTwo.png)');
     }
 
-    // Compute real pixel baseline from CSS variables, then animate using px values.
+    // Compute pixel baseline from CSS var --fg-h and animate using px values so dog lands on grass.
     var root = getComputedStyle(document.documentElement);
-    var fgRaw = root.getPropertyValue('--fg-h').trim();    // e.g. "120px" (set by Scale.js)
-    var dogRaw = root.getPropertyValue('--dog-h').trim();  // e.g. "84px"
-    var fgPx = parseInt(fgRaw, 10) || 0;
-    var dogPx = parseInt(dogRaw, 10) || 0;
+    var fgRaw = root.getPropertyValue('--fg-h').trim();    // e.g. "30vh" or "340px"
+    var dogRaw = root.getPropertyValue('--dog-h').trim();  // e.g. "84px" after mobile scaling
 
-    // The top-of-grass measured from bottom of wrapper is fgPx.
-    // Position dog's bottom so its feet sit on top of the grass.
-    var groundBottomPx = fgPx; // bottom CSS value to align dog bottom with top of grass
-    var sniffLiftPx = Math.round(dogPx * 0.6); // lift during sniff/walk
+    function toPx(raw) {
+      if (!raw) return 0;
+      raw = raw.trim();
+      if (raw.endsWith('vh')) {
+        var vh = window.innerHeight;
+        var v = parseFloat(raw.slice(0, -2));
+        return Math.round((v / 100) * vh);
+      }
+      return parseInt(raw, 10) || 0;
+    }
+
+    var fgPx = toPx(fgRaw);
+    var dogPx = toPx(dogRaw);
+
+    // groundBottomPx is the distance from wrapper bottom to the top of the grass
+    var groundBottomPx = fgPx;
+    var sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
 
     $(this.dogId)
       .css('bottom', groundBottomPx + 'px')
