@@ -8,11 +8,51 @@ class Duck{
         this.duckFlight;
         this.currentWidth = 48;
         this.currentHeight = 20;
+        this.lastDirection = "right";
+        this.frameIndex = 0;
+        this.frameTimer = null;
+        this.frameIntervalMs = 100;
+        this.currentFrames = null;
+        this.frames = {
+            right: [
+                "/DRANKHUNT/resources/sprites/duck/png/right1.png",
+                "/DRANKHUNT/resources/sprites/duck/png/right2.png",
+                "/DRANKHUNT/resources/sprites/duck/png/right3.png"
+            ],
+            left: [
+                "/DRANKHUNT/resources/sprites/duck/png/left1.png",
+                "/DRANKHUNT/resources/sprites/duck/png/left2.png",
+                "/DRANKHUNT/resources/sprites/duck/png/left3.png"
+            ],
+            rightup: [
+                "/DRANKHUNT/resources/sprites/duck/png/rightup1.png",
+                "/DRANKHUNT/resources/sprites/duck/png/rightup2.png",
+                "/DRANKHUNT/resources/sprites/duck/png/rightup3.png"
+            ],
+            rightdown: [
+                "/DRANKHUNT/resources/sprites/duck/png/rightdown1.png",
+                "/DRANKHUNT/resources/sprites/duck/png/rightdown2.png",
+                "/DRANKHUNT/resources/sprites/duck/png/rightdown3.png"
+            ],
+            leftup: [
+                "/DRANKHUNT/resources/sprites/duck/png/leftup1.png",
+                "/DRANKHUNT/resources/sprites/duck/png/leftup2.png",
+                "/DRANKHUNT/resources/sprites/duck/png/leftup3.png"
+            ],
+            leftdown: [
+                "/DRANKHUNT/resources/sprites/duck/png/leftdown1.png",
+                "/DRANKHUNT/resources/sprites/duck/png/leftdown2.png",
+                "/DRANKHUNT/resources/sprites/duck/png/leftdown3.png"
+            ],
+            fallingright: ["/DRANKHUNT/resources/sprites/duck/png/fallingright.png"],
+            fallingleft: ["/DRANKHUNT/resources/sprites/duck/png/fallingleft.png"]
+        };
     }
 
 
     startFlight(){
         this.resurrect();
+        this.startFrameAnimation();
         this.duckFlight = setInterval(() => this.fly(), 1000);
     }
 
@@ -28,6 +68,7 @@ class Duck{
 
     stopFlightAnimation(){
         clearInterval(this.duckFlight);
+        this.stopFrameAnimation();
         $(this.duckId).stop(true);
     }
 
@@ -49,11 +90,14 @@ class Duck{
             this.isAlive = false;
             let this_ = this;
             this.stopFlightAnimation();
-            $(this.duckId).css("background-image", "url(resources/sprites/duck/hit.png)")
+            $(this.duckId).css("background-image", "url(/DRANKHUNT/resources/sprites/duck/png/hit.png)")
 
             setTimeout(function(){
+                let fallingFrames = this_.lastDirection === "left"
+                    ? this_.frames.fallingleft
+                    : this_.frames.fallingright;
                 $(this_.duckId)
-                    .css("background-image", "url(resources/sprites/duck/falling.gif)")
+                    .css("background-image", `url(${fallingFrames[0]})`)
                     .animate({bottom: `10%`,}, 650);
             },150);
     }
@@ -71,28 +115,50 @@ class Duck{
 
 
     changeDuckBackground(destWidth, destHeight){
+        let direction = "right";
         if (destWidth > this.currentWidth) {
-            $(this.duckId)
-            .css("background-image", "url(resources/sprites/duck/flyright.gif)");
+            direction = "right";
             if(destHeight - this.currentHeight > 20){
-                $(this.duckId)
-                .css("background-image", "url(resources/sprites/duck/flyrightup.gif)");}
+                direction = "rightup";}
             if(destHeight - this.currentHeight < -20){
-                $(this.duckId)
-                .css("background-image", "url(resources/sprites/duck/flyrightdown.gif)");
+                direction = "rightdown";
             
             }
         } else {
-            $(this.duckId)
-            .css("background-image", "url(resources/sprites/duck/flyleft.gif)");
-
+            direction = "left";
             if(destHeight - this.currentHeight > 20){
-                $(this.duckId)
-                .css("background-image", "url(resources/sprites/duck/flyleftup.gif)");}
+                direction = "leftup";}
             if(destHeight - this.currentHeight < -20){
-                $(this.duckId)
-                .css("background-image", "url(resources/sprites/duck/flyleftdown.gif)");
+                direction = "leftdown";
             }
+        }
+        this.lastDirection = direction.startsWith("left") ? "left" : "right";
+        this.currentFrames = this.frames[direction];
+    }
+
+    setDuckFrame(frames){
+        this.frameIndex = (this.frameIndex + 1) % frames.length;
+        $(this.duckId).css("background-image", `url(${frames[this.frameIndex]})`);
+    }
+
+    startFrameAnimation(){
+        if (this.frameTimer) {
+            return;
+        }
+        this.currentFrames = this.frames.right;
+        this.setDuckFrame(this.currentFrames);
+        this.frameTimer = setInterval(() => {
+            if (!this.isAlive || !this.currentFrames) {
+                return;
+            }
+            this.setDuckFrame(this.currentFrames);
+        }, this.frameIntervalMs);
+    }
+
+    stopFrameAnimation(){
+        if (this.frameTimer) {
+            clearInterval(this.frameTimer);
+            this.frameTimer = null;
         }
     }
 
