@@ -1,9 +1,10 @@
 :root {
-  --fg-h: 340px; /* foreground height (Option B) */
-  --duck-w: 160px;
-  --duck-h: 150px;
-  --dog-w: 76px;
-  --dog-h: 70px;
+  --fg-h: 340px; /* foreground height */
+  --duck-w: 120px;
+  --duck-h: 110px;
+  --duck-elev: 40px; /* how much higher than ground the duck flies */
+  --dog-w: 60px;
+  --dog-h: 56px;
   --hud-h: 86px;
 }
 
@@ -14,41 +15,37 @@ html, body {
   background: #7fb0ff; /* neutral fallback outside gameWrap */
 }
 
-/* ensure body uses stable mobile viewport height unit */
 body{
-  min-height: 100svh; /* use svh for mobile stability */
+  min-height: 100svh;
   font-family: Arial, sans-serif;
   user-select: none;
 }
 
-/* game wrapper: fixed design size and scaling origin, centered horizontally */
 #gameWrap {
-  width: 390px; /* design width */
-  height: 844px; /* design height */
+  width: 390px;
+  height: 844px;
   position: absolute;
   left: 50%;
   top: env(safe-area-inset-top, 0);
   transform-origin: top left;
   -webkit-transform-origin: 0 0;
   overflow: hidden;
-  background: black; /* base behind the .sky element */
+  background: black;
   z-index: 1;
 }
 
-/* in-game sky/background lives inside the wrapper so scaling keeps it intact */
 #gameWrap .sky {
   position: relative;
   background-image: url("/DRANKHUNT/resources/sprites/background/sky1.png");
   background-size: cover;
   background-position: center;
-  min-height: 100%; /* make sky fill the fixed-game container */
+  min-height: 100%;
   width: 100%;
   background-color: transparent;
   background-repeat: no-repeat;
   cursor: crosshair;
 }
 
-/* hide win overlay by default (JS will show it when appropriate) */
 #winOverlay{
   display: none;
   position: absolute;
@@ -59,7 +56,6 @@ body{
   z-index: 5;
 }
 
-/* global pixel-art rendering */
 #gameWrap, #gameWrap * {
   image-rendering: pixelated;
   -webkit-font-smoothing: none;
@@ -71,10 +67,8 @@ body{
     bottom: 0;
     left: 0;
     width: 100%;
-    /* use a variable-driven fixed pixel height inside the design surface so bushes appear larger and consistent */
     height: var(--fg-h);
     background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
-    /* force background to match the chosen foreground height */
     background-size: 100% var(--fg-h);
     background-position: bottom center;
     background-repeat: repeat-x;
@@ -83,12 +77,11 @@ body{
 
 .duck{
     left: 48%;
-    /* position duck relative to foreground height so it sits above grass */
-    bottom: calc(var(--fg-h) - 120px);
+    bottom: calc(var(--fg-h) - var(--duck-h) + var(--duck-elev));
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
-    width: var(--duck-w); /* increased for better visibility */
+    width: var(--duck-w);
     height: var(--duck-h);
     background-size: 100%;
 }
@@ -100,11 +93,11 @@ body{
 }
 
 #dog1{
-    width: var(--dog-w); /* larger dog */
-    height: var(--dog-h); /* match aspect */
+    width: var(--dog-w);
+    height: var(--dog-h);
     z-index: 3;
     left: 20px;
-    bottom: calc(var(--fg-h) - 120px);
+    bottom: calc(var(--fg-h) - var(--dog-h));
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -114,12 +107,11 @@ body{
 
 #dog2{
     width: var(--dog-w);
-    height: calc(var(--dog-h) + 6px);
+    height: var(--dog-h);
     left: 180px;
-    bottom: calc(var(--fg-h) - 120px);
+    bottom: calc(var(--fg-h) - var(--dog-h));
 }
 
-/* Ensure points counter scales in design pixels and sits above grass */
 #pointsCounter{
     text-align: right;
     left: 28px;
@@ -142,4 +134,4 @@ body{
     -webkit-transform: translateY(-50%);
 }
 
-/* keep remaining original rules (bar.css handles HUD specifics) */
+/* keep the rest of the CSS in place (bar.css handles HUD specifics) */
