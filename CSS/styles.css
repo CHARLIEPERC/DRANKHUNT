@@ -17,6 +17,16 @@ body{
     /* preload ducks (keeps previous content rule but removed content: as it's unnecessary here) */
 }
 
+/* game wrapper: fixed design size and scaling origin */
+#gameWrap {
+    width: 390px; /* design width */
+    height: 844px; /* design height */
+    transform-origin: top left;
+    -webkit-transform-origin: 0 0;
+    overflow: hidden;
+    position: relative;
+}
+
 /* global pixel-art rendering */
 #gameWrap, #gameWrap * {
     image-rendering: pixelated;
