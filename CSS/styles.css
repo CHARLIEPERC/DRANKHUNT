@@ -62,13 +62,11 @@ body{
     bottom: 0;
     left: 0;
     width: 100%;
-    /* allow bushes to be taller (about 25-35% of game design height) while keeping them pinned to bottom */
-    min-height: 25%;
-    max-height: 35%;
-    height: auto;
+    /* use a fixed pixel height inside the design surface so bushes appear larger and consistent */
+    height: 240px; /* larger foreground/grass area */
     background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
-    /* scale to full width so the foreground spans entire game width */
-    background-size: 100% auto;
+    /* force background to match the chosen foreground height */
+    background-size: 100% 240px;
     background-position: bottom center;
     background-repeat: repeat-x;
     image-rendering: pixelated;
@@ -77,12 +75,12 @@ body{
 
 .duck{
     left: 48%;
-    bottom: 20%;
+    bottom: 220px; /* sit above the foreground area */
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
-    width: 78px; /* fixed px to ensure consistent design resolution */
-    height: 73px;
+    width: 120px; /* increased for better visibility */
+    height: 110px;
     background-size: 100%;
 }
 
@@ -93,11 +91,11 @@ body{
 }
 
 #dog1{
-    width: 39px; /* design pixel sizes (approx 10vw at 390px design width) */
-    height: 34px; /* match aspect */
+    width: 60px; /* larger dog */
+    height: 56px; /* match aspect */
     z-index: 3;
-    left: 0%;
-    bottom: 20%;
+    left: 20px;
+    bottom: 220px;
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -106,8 +104,31 @@ body{
 }
 
 #dog2{
-    width: 39px;
-    height: 45px;
-    left: 48%;
-    bottom: 10%;
+    width: 60px;
+    height: 70px;
+    left: 180px;
+    bottom: 220px;
+}
+
+/* Ensure points counter scales in design pixels */
+#pointsCounter{
+    text-align: right;
+    left: 28px;
+    bottom: 320px;
+    background-image: url("/DRANKHUNT/resources/sprites/scoreImages/round.png");
+    background-size: 100% 100%;
+    width: 120px;
+    height: 50px;
+    position: absolute;
+    z-index: 3;
+}
+
+#levelCount{
+    margin: 0;
+    margin-right: 5%;
+    margin-left: 50%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
 }
