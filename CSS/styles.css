@@ -1,3 +1,12 @@
+:root {
+  --fg-h: 340px; /* foreground height (Option B) */
+  --duck-w: 160px;
+  --duck-h: 150px;
+  --dog-w: 76px;
+  --dog-h: 70px;
+  --hud-h: 86px;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -62,25 +71,25 @@ body{
     bottom: 0;
     left: 0;
     width: 100%;
-    /* use a fixed pixel height inside the design surface so bushes appear larger and consistent */
-    height: 240px; /* larger foreground/grass area */
+    /* use a variable-driven fixed pixel height inside the design surface so bushes appear larger and consistent */
+    height: var(--fg-h);
     background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
     /* force background to match the chosen foreground height */
-    background-size: 100% 240px;
+    background-size: 100% var(--fg-h);
     background-position: bottom center;
     background-repeat: repeat-x;
     image-rendering: pixelated;
 }
 
-
 .duck{
     left: 48%;
-    bottom: 220px; /* sit above the foreground area */
+    /* position duck relative to foreground height so it sits above grass */
+    bottom: calc(var(--fg-h) - 120px);
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
-    width: 120px; /* increased for better visibility */
-    height: 110px;
+    width: var(--duck-w); /* increased for better visibility */
+    height: var(--duck-h);
     background-size: 100%;
 }
 
@@ -91,11 +100,11 @@ body{
 }
 
 #dog1{
-    width: 60px; /* larger dog */
-    height: 56px; /* match aspect */
+    width: var(--dog-w); /* larger dog */
+    height: var(--dog-h); /* match aspect */
     z-index: 3;
     left: 20px;
-    bottom: 220px;
+    bottom: calc(var(--fg-h) - 120px);
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -104,17 +113,17 @@ body{
 }
 
 #dog2{
-    width: 60px;
-    height: 70px;
+    width: var(--dog-w);
+    height: calc(var(--dog-h) + 6px);
     left: 180px;
-    bottom: 220px;
+    bottom: calc(var(--fg-h) - 120px);
 }
 
-/* Ensure points counter scales in design pixels */
+/* Ensure points counter scales in design pixels and sits above grass */
 #pointsCounter{
     text-align: right;
     left: 28px;
-    bottom: 320px;
+    bottom: calc(var(--fg-h) - 20px);
     background-image: url("/DRANKHUNT/resources/sprites/scoreImages/round.png");
     background-size: 100% 100%;
     width: 120px;
@@ -132,3 +141,5 @@ body{
     transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
 }
+
+/* keep remaining original rules (bar.css handles HUD specifics) */
