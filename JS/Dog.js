@@ -75,13 +75,21 @@ class Dog{
             $(this.dogId).css("backgroundImage" ,'url(/DRANKHUNT/resources/sprites/dog/gotTwo.png)');
         }
 
+        // compute pixel baselines from CSS variables so dog feet align with grass top
+        const root = getComputedStyle(document.documentElement);
+        const fgRaw = root.getPropertyValue('--fg-h').trim();    // e.g. "340px"
+        const dogRaw = root.getPropertyValue('--dog-h').trim();  // e.g. "56px"
+        const fgPx = parseInt(fgRaw, 10) || 0;
+        const dogPx = parseInt(dogRaw, 10) || 0;
+
+        // bottom value so the dog's bottom edge aligns with the top of the grass
+        const groundBottomPx = fgPx; // top of grass measured from bottom in px
+        const sniffLift = 36;        // pixels to lift during sniff/walk (tweakable)
+
         $(this.dogId)
-        .animate({bottom: "35%",}, 600 ,function(){
-        })
-        // change to wait
-        .animate({bottom: "35%",}, 800 ,function(){
-        })
-        .animate({bottom: "15%",}, 600 ,function(){
-        })
+          .css('bottom', groundBottomPx + 'px')
+          .animate({ bottom: (groundBottomPx - sniffLift) + 'px' }, 600)
+          .animate({ bottom: (groundBottomPx - sniffLift) + 'px' }, 800)
+          .animate({ bottom: groundBottomPx + 'px' }, 600);
     }
 }
