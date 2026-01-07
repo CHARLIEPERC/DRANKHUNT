@@ -38,17 +38,16 @@ body{
 }
 
 
-.bushes{
-    z-index: 1;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 45vh;              /* increase height so bushes/trees are big */
-    background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    pointer-events: none;
-}
+ .bushes{
+     z-index: 1;
+     position: relative;
+-    height: 100%; 
+-    background-image: url("resources/sprites/background/bushes.png");
++    min-height: 100%;
++    background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
+     background-size: 100% 100%;
+     background-repeat: no-repeat;
+ }
 
 
 
