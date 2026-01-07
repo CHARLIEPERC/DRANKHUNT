@@ -1,6 +1,7 @@
 var startScreen = new StartScreen();
 
 function launchApplication() {
+    startScreen.playMenuMusic();
     let gameParameters = startScreen.getGameParametersFromUserSelect();
     let selectedModeName = gameParameters.modeName;
     let selectedMode;
@@ -16,5 +17,6 @@ function launchApplication() {
     }
 
     startScreen.hideStartScreen();
+    startScreen.stopMenuMusic();
     selectedMode.startGame();
 }
