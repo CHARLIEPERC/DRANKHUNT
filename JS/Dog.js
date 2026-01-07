@@ -74,33 +74,24 @@ class Dog {
       $(this.dogId).css("backgroundImage", 'url(/DRANKHUNT/resources/sprites/dog/gotTwo.png)');
     }
 
-    // Compute pixel baseline from CSS var --fg-h and animate using px values so dog lands on grass.
-    var root = getComputedStyle(document.documentElement);
-    var fgRaw = root.getPropertyValue('--fg-h').trim();    // e.g. "30vh" or "340px"
-    var dogRaw = root.getPropertyValue('--dog-h').trim();  // e.g. "84px" after mobile scaling
+    // Measure the actual .bushes element height to compute the ground baseline in pixels
+    const bushes = document.querySelector('.bushes');
+    const groundBaselinePx = bushes ? bushes.getBoundingClientRect().height : 340;
+    
+    // Set the CSS custom property so CSS and other JS can use the measured pixel value
+    document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
+    
+    // Get dog height from CSS var
+    const root = getComputedStyle(document.documentElement);
+    const dogRaw = root.getPropertyValue('--dog-h').trim();
+    const dogPx = parseInt(dogRaw, 10) || 56;
 
-    function toPx(raw) {
-      if (!raw) return 0;
-      raw = raw.trim();
-      if (raw.endsWith('vh')) {
-        var vh = window.innerHeight;
-        var v = parseFloat(raw.slice(0, -2));
-        return Math.round((v / 100) * vh);
-      }
-      return parseInt(raw, 10) || 0;
-    }
-
-    var fgPx = toPx(fgRaw);
-    var dogPx = toPx(dogRaw);
-
-    // groundBottomPx is the distance from wrapper bottom to the top of the grass
-    var groundBottomPx = fgPx;
-    var sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
+    const sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
 
     $(this.dogId)
-      .css('bottom', groundBottomPx + 'px')
-      .animate({ bottom: (groundBottomPx - sniffLiftPx) + 'px' }, 600)
-      .animate({ bottom: (groundBottomPx - sniffLiftPx) + 'px' }, 800)
-      .animate({ bottom: groundBottomPx + 'px' }, 600);
+      .css('bottom', groundBaselinePx + 'px')
+      .animate({ bottom: (groundBaselinePx - sniffLiftPx) + 'px' }, 600)
+      .animate({ bottom: (groundBaselinePx - sniffLiftPx) + 'px' }, 800)
+      .animate({ bottom: groundBaselinePx + 'px' }, 600);
   }
 }
