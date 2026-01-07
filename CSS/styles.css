@@ -21,7 +21,7 @@ body{
     min-height: 100%;
     font-family: Arial, sans-serif;
     user-select: none;
-    content: url("/DRANKHUNT/resources/sprites/duck/png/hit.png") url("/DRANKHUNT/resources/sprites/duck/png/rightup1.png") url("/DRANKHUNT/resources/sprites/duck/png/rightdown1.png") url("/DRANKHUNT/resources/sprites/duck/png/leftup1.png") url("/DRANKHUNT/resources/sprites/duck/png/leftdown1.png") url("/DRANKHUNT/resources/sprites/duck/png/right1.png") url("/DRANKHUNT/resources/sprites/duck/png/left1.png") url("/DRANKHUNT/resources/sprites/duck/png/fallingright.png") ;
+    content: url("/DRANKHUNT/resources/sprites/duck/png/hit.png") url("/DRANKHUNT/resources/sprites/duck/png/rightup1.png") url("/DRANKHUNT/resources/sprites/duck/png/rightdown1.png") url("/DRANKHUNT/resources/sprites/duck/png/right1.png") url("/DRANKHUNT/resources/sprites/duck/png/right2.png") url("/DRANKHUNT/resources/sprites/duck/png/right3.png") url("/DRANKHUNT/resources/sprites/duck/png/left1.png") url("/DRANKHUNT/resources/sprites/duck/png/left2.png") url("/DRANKHUNT/resources/sprites/duck/png/left3.png");
 }
 
 .sky {
@@ -55,7 +55,6 @@ body{
     background-repeat: repeat-x;
     image-rendering: pixelated;
 }
-
 
 
 .duck{
