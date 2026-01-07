@@ -20,7 +20,7 @@ h2{
 
 
 body{
-    min-height: 100%;
+    min-height: 100dvh;
     max-height: 100dvh;
     font-family: Arial, sans-serif;
     user-select: none;
@@ -30,7 +30,7 @@ body{
 .sky {
     position: relative;
     background-image: none;
-    height: 100dvh;
+    max-height: 100dvh;
     width: 100%;
     background-color: transparent;
     background-position: center;
