@@ -87,11 +87,12 @@ class Game{
         this.shotHandler.disablehooting();
 
         // stop all ducks: clear their flight/frame timers and remove their DOM so movement/animation halts
+        // use try-catch to handle gracefully if duck methods don't exist or fail
         if (this.ducksHandler && Array.isArray(this.ducksHandler.ducks)) {
             this.ducksHandler.ducks.forEach(duck => {
-                try { if (duck.stopFlightAnimation) duck.stopFlightAnimation(); } catch(e){}
-                try { if (duck.stopFrameAnimation) duck.stopFrameAnimation(); } catch(e){}
-                try { if (duck.duckId) $(duck.duckId).remove(); } catch(e){}
+                try { if (duck.stopFlightAnimation) duck.stopFlightAnimation(); } catch(e){ /* ignore - ensure win screen shows */ }
+                try { if (duck.stopFrameAnimation) duck.stopFrameAnimation(); } catch(e){ /* ignore - ensure win screen shows */ }
+                try { if (duck.duckId) $(duck.duckId).remove(); } catch(e){ /* ignore - ensure win screen shows */ }
             });
         }
 
