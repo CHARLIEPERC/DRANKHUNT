@@ -24,7 +24,8 @@ body{
     content: url("/DRANKHUNT/resources/sprites/duck/png/hit.png") url("/DRANKHUNT/resources/sprites/duck/png/rightup1.png") url("/DRANKHUNT/resources/sprites/duck/png/rightdown1.png") url("/DRANKHUNT/resources/sprites/duck/png/leftup1.png") url("/DRANKHUNT/resources/sprites/duck/png/leftdown1.png") url("/DRANKHUNT/resources/sprites/duck/png/right1.png") url("/DRANKHUNT/resources/sprites/duck/png/left1.png") url("/DRANKHUNT/resources/sprites/duck/png/fallingright.png") ;
 }
 
-.sky { 
+.sky {
+    position: relative;
     background-image: none;
     min-height: 100vh;
     width: 100%;
@@ -33,6 +34,7 @@ body{
     background-repeat: no-repeat;
     background-size: cover;
     cursor: crosshair;
+    
 }
 
 
@@ -41,12 +43,13 @@ body{
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 35%;
+    height: 45vh;              /* increase height so bushes/trees are big */
     background-image: url("/DRANKHUNT/resources/sprites/background/bushes.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
     pointer-events: none;
 }
+
 
 
 .duck{
