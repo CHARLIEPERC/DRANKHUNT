@@ -70,19 +70,36 @@ class Duck {
   }
 
   moveToInitialPosition() {
-    // Anchor the duck's bottom to the top of the grass (foreground) using CSS vars.
-    // This ensures the starting baseline is consistent across viewports.
-    $(this.duckId).css("bottom", "calc(var(--fg-h) - var(--duck-h) - 8px)");
+    // Compute pixel bottom from CSS vars so the duck baseline is anchored to the foreground.
+    var root = getComputedStyle(document.documentElement);
+    var fgRaw = root.getPropertyValue('--fg-h').trim();       // e.g. "30vh" or "340px"
+    var duckElevRaw = root.getPropertyValue('--duck-elev').trim(); // e.g. "80px"
+
+    // Convert possible 'vh' to px if necessary; fallback to numeric parse for px values
+    function toPx(raw) {
+      if (!raw) return 0;
+      raw = raw.trim();
+      if (raw.endsWith('vh')) {
+        var vh = window.innerHeight;
+        var v = parseFloat(raw.slice(0, -2));
+        return Math.round((v / 100) * vh);
+      }
+      return parseInt(raw, 10) || 0;
+    }
+
+    var fgPx = toPx(fgRaw);
+    var duckElevPx = toPx(duckElevRaw);
+
+    // Set duck bottom so it's duckElevPx above the top of the grass (fgPx)
+    var bottomPx = fgPx + duckElevPx;
+    $(this.duckId).css('bottom', bottomPx + 'px');
   }
 
   flyOut() {
     this.stopFlightAnimation();
     let destWidth = this.getRandomWidth(10, 85);
     this.changeDuckBackground(destWidth, 100);
-    $(this.duckId).animate({
-      bottom: `100%`,
-      left: `${destWidth}%`
-    }, 500);
+    $(this.duckId).animate({ bottom: `100%`, left: `${destWidth}%` }, 500);
   }
 
   fallDown() {
@@ -95,9 +112,7 @@ class Duck {
       let fallingFrames = this_.lastDirection === "left" ? this_.frames.fallingleft : this_.frames.fallingright;
       $(this_.duckId)
         .css("background-image", `url(${fallingFrames[0]})`)
-        .animate({
-          bottom: `10%`
-        }, 650);
+        .animate({ bottom: `10%` }, 650);
     }, 150);
   }
 
@@ -106,10 +121,7 @@ class Duck {
     let destWidth = this.getRandomWidth(10, 85);
     let destHeight = this.getRandomHeight(35, 85);
     this.changeDuckBackground(destWidth, destHeight);
-    $(this.duckId).animate({
-      bottom: `${destHeight}%`,
-      left: `${destWidth}%`
-    }, 1000);
+    $(this.duckId).animate({ bottom: `${destHeight}%`, left: `${destWidth}%` }, 1000);
     this.currentWidth = destWidth;
     this.currentHeight = destHeight;
   }
@@ -135,11 +147,11 @@ class Duck {
   }
 
   startFrameAnimation() {
-    if (this.frameTimer) { return; }
+    if (this.frameTimer) return;
     this.currentFrames = this.frames.right;
     this.setDuckFrame(this.currentFrames);
     this.frameTimer = setInterval(() => {
-      if (!this.isAlive || !this.currentFrames) { return; }
+      if (!this.isAlive || !this.currentFrames) return;
       this.setDuckFrame(this.currentFrames);
     }, this.frameIntervalMs);
   }
