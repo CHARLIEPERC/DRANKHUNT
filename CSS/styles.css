@@ -9,7 +9,7 @@
   --hud-h: 86px;
 }
 
-/* Lock viewport, prevent scrolling on iOS, and disable touch-action to avoid scroll/zoom */
+/* Lock viewport, prevent scrolling on iOS, and disable touch-action to avoid scroll/zoom gestures */
 html, body {
   height: 100%;
   margin: 0;
@@ -115,7 +115,6 @@ body {
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
-
 #dog2 { left: 180px; }
 
 #pointsCounter {
