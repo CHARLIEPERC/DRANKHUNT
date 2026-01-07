@@ -139,6 +139,21 @@ body {
   -webkit-transform: translateY(-50%);
 }
 
+/* Override for small screen ground and sprite offsets */
+.duck {
+  bottom: calc(var(--fg-h) - var(--duck-h) + var(--duck-elev) + 18px) !important;
+}
+#dog1,
+#dog2 {
+  bottom: calc(var(--fg-h) - var(--dog-h) + 12px) !important;
+}
+@media (max-width: 499px) {
+  .bushes {
+    height: 30vh !important;
+    background-size: 100% 30vh !important;
+  }
+}
+
 /* Mobile-only adjustments via CSS: keep ground about 30vh tall, scale sprites visually without transform */
 @media (max-width: 767px) {
   /* set CSS variable to 30vh so JS/CSS using var(--fg-h) aligns to the visual floor */
