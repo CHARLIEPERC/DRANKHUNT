@@ -1,28 +1,15 @@
 :root {
-  --fg-h: 340px;
-  --ground-baseline: var(--fg-h);
+  --fg-h: 340px; /* foreground height */
+  --ground-baseline: var(--fg-h); /* fallback baseline, JS will update to measured pixel value */
   --duck-w: 90px;
   --duck-h: 80px;
-  --duck-elev: 80px;
+  --duck-elev: 80px; /* how much higher than ground the duck flies */
   --dog-w: 60px;
   --dog-h: 56px;
-  --dog-offset: 6px; /* tweakable: increase if dog appears to float, decrease if feet get cut off */
+  --dog-offset: 18px; /* visual alignment offset: increase if dog still floats, decrease if feet get cut off */
   --hud-h: 86px;
 }
 
-/* ensure CSS fallback uses the offset so initial render matches JS behaviour */
-#dog1 {
-  bottom: calc(var(--ground-baseline, 30vh) - var(--dog-offset));
-}
-#dog2 {
-  bottom: calc(var(--ground-baseline, 30vh) - var(--dog-offset));
-}
-
-/* sync .bushes to --fg-h on load */
-.bushes {
-  height: var(--fg-h);
-  background-size: 100% var(--fg-h);
-}
 html, body {
   height: 100%;
   margin: 0;
@@ -117,7 +104,7 @@ body{
     height: var(--dog-h);
     z-index: 3;
     left: 20px;
-    bottom: calc(var(--ground-baseline, 30vh)); /* baseline: top of grass; fallback 30vh for initial render */
+    bottom: calc(var(--ground-baseline, 30vh) - var(--dog-offset)); /* baseline: top of grass; apply visual offset */
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -129,7 +116,7 @@ body{
     width: var(--dog-w);
     height: var(--dog-h);
     left: 180px;
-    bottom: calc(var(--ground-baseline, 30vh)); /* baseline: top of grass; fallback 30vh for initial render */
+    bottom: calc(var(--ground-baseline, 30vh) - var(--dog-offset)); /* baseline: top of grass; apply visual offset */
 }
 
 #pointsCounter{
