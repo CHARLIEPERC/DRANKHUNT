@@ -166,14 +166,19 @@ class ExtremeGame extends Game{
         this.checkIfRoundIsFinished();
     }
 
-    finishRound(){
-        this.stopAutoShooting();
-        this.stopCountdownToRoundEnd();
-        this.shotHandler.disablehooting();
-        this.ducksHandler.removeRemainingDucks();
-        this.dog2.showDogWithKilledDucks(this.ducksHandler.ducksKilledInRound);
-        this.newRoundTimeout = setTimeout(() => this.startNewRound(), 2000);   
-        this.checkIfRoundIsPassed();
+       finishRound(){
+        // Ensure auto shooting stops first (Extreme mode specific)
+        try { this.stopAutoShooting(); } catch(e) {}
+
+        // Reuse base class finishRound() which performs the win-level check,
+        // stops countdowns, disables shooting, removes ducks and schedules next round.
+        super.finishRound();
+
+        // If we've reached max level, super.finishRound() invoked finishWin() and returned early.
+        // Guard here to avoid any further Extreme-mode behavior after the win.
+        if (this.pointsHandler.level >= this.maxLevel) return;
+
+        // Extreme-specific behavior: allow adding a new duck for the next round.
         this.addNewDuck();
     }
 
