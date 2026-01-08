@@ -18,7 +18,7 @@ class Game{
 
     startGame(){
         this.dog1.launchWalkoutAnimation();
-        setTimeout(() => this.startNewRound(), 7300);
+        setTimeout(() => this.startNewRound(), 400);
     }
 
     shoot(){
