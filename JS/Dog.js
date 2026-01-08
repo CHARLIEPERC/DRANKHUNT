@@ -1,4 +1,3 @@
-
 class Dog {
 
   constructor(id) {
@@ -21,12 +20,27 @@ class Dog {
   }
 
   // Measure bushes and apply CSS variable + inline bottom for immediate anchoring.
+  // Apply a small CSS-configurable offset so the dog's feet (visible pixels) align with the grass.
   computeGroundBaseline() {
     const groundBaselinePx = this.getGroundBaselinePx();
     // Ensure CSS var includes unit
     document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
-    // Also set inline bottom on the dog element so it's positioned immediately
-    $(this.dogId).css('bottom', `${groundBaselinePx}px`);
+
+    // read dog offset from css var --dog-offset (defaults to 6px)
+    const root = getComputedStyle(document.documentElement);
+    const dogOffsetRaw = (root.getPropertyValue('--dog-offset') || '').trim();
+    let dogOffsetPx = 6;
+    if (dogOffsetRaw.endsWith('px')) {
+      const parsed = parseInt(dogOffsetRaw, 10);
+      if (!isNaN(parsed)) dogOffsetPx = parsed;
+    } else if (dogOffsetRaw.endsWith('vh')) {
+      const parsed = parseFloat(dogOffsetRaw);
+      if (!isNaN(parsed)) dogOffsetPx = Math.round(window.innerHeight * parsed / 100);
+    }
+
+    // Also set inline bottom on the dog element so it's positioned immediately (apply offset to align feet)
+    const effectiveBottom = Math.max(0, groundBaselinePx - dogOffsetPx);
+    $(this.dogId).css('bottom', `${effectiveBottom}px`);
     return groundBaselinePx;
   }
 
@@ -135,12 +149,24 @@ class Dog {
     const dogRaw = root.getPropertyValue('--dog-h').trim();
     const dogPx = parseInt(dogRaw, 10) || 56;
 
+    // read dog offset from css var --dog-offset (defaults to 6px)
+    const dogOffsetRaw = (root.getPropertyValue('--dog-offset') || '').trim();
+    let dogOffsetPx = 6;
+    if (dogOffsetRaw.endsWith('px')) {
+      const parsed = parseInt(dogOffsetRaw, 10);
+      if (!isNaN(parsed)) dogOffsetPx = parsed;
+    } else if (dogOffsetRaw.endsWith('vh')) {
+      const parsed = parseFloat(dogOffsetRaw);
+      if (!isNaN(parsed)) dogOffsetPx = Math.round(window.innerHeight * parsed / 100);
+    }
+
+    const effectiveBottom = Math.max(0, groundBaselinePx - dogOffsetPx);
     const sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
 
     $(this.dogId)
-      .css('bottom', `${groundBaselinePx}px`)
-      .animate({ bottom: `${groundBaselinePx - sniffLiftPx}px` }, 600)
-      .animate({ bottom: `${groundBaselinePx - sniffLiftPx}px` }, 800)
-      .animate({ bottom: `${groundBaselinePx}px` }, 600);
+      .css('bottom', `${effectiveBottom}px`)
+      .animate({ bottom: `${effectiveBottom - sniffLiftPx}px` }, 600)
+      .animate({ bottom: `${effectiveBottom - sniffLiftPx}px` }, 800)
+      .animate({ bottom: `${effectiveBottom}px` }, 600);
   }
 }
