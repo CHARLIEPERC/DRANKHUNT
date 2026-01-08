@@ -1,3 +1,4 @@
+
 class Dog {
 
   constructor(id) {
