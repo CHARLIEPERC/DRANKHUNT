@@ -20,8 +20,8 @@ class Dog {
     ];
   }
 
-  // Returns a positive pixel value for the ground baseline.
-  // Only accepts a non-zero measured .bushes height. Falls back to CSS --fg-h (vh/px) or 30vh.
+  // Returns a positive pixel value for the ground baseline. Only accepts a non-zero
+  // measured .bushes height. Falls back to CSS --fg-h (vh/px) or 30vh.
   getGroundBaselinePx() {
     const bushes = document.querySelector('.bushes');
     if (bushes) {
@@ -35,22 +35,23 @@ class Dog {
       return Math.round(window.innerHeight * parseFloat(fg) / 100);
     }
     if (fg.endsWith('px')) {
-      return parseInt(fg, 10) || 0;
+      const parsed = parseInt(fg, 10);
+      if (parsed > 0) return parsed;
     }
 
-    // final fallback: 30vh of viewport height
+    // final fallback: 30vh
     return Math.round(window.innerHeight * 0.30);
   }
 
-  // Position dog on grass using measured baseline; sets CSS var and inline bottom.
+  // Position dog on grass using measured baseline; set CSS var so other code/CSS can use it.
   positionDogOnGrass() {
     const ground = this.getGroundBaselinePx();
-    if (!ground || ground <= 0) return; // guard: nothing to do if still 0
+    if (ground <= 0) return; // guard: nothing to do if still 0
 
     // set CSS var with px unit so existing calc(var(--ground-baseline)) works
     document.documentElement.style.setProperty('--ground-baseline', `${ground}px`);
 
-    // anchor the dog immediately and clear interfering inline styles
+    // ensure dog is anchored immediately
     $(this.dogId).css({ bottom: ground + 'px', top: '', transform: '' });
   }
 
