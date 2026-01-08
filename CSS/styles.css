@@ -187,3 +187,37 @@ body{
 
 /* ...other CSS below remains unchanged... */
 /* keep the rest of the CSS in place (bar.css handles HUD specifics) */
+
+```css
+/* ...other CSS above remains unchanged... */
+
+/* DOG: anchored relative to the ground (foreground) — original baseline restored */
+.dog{
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+/* #dog1 and #dog2: use CSS var with fallback to 30vh to avoid percent bottoms.
+   JS will set --ground-baseline (px) when layout is ready and will override inline bottom. */
+#dog1{
+    width: var(--dog-w);
+    height: var(--dog-h);
+    z-index: 3;
+    left: 20px;
+    bottom: calc(var(--ground-baseline, 30vh)); /* baseline: top of grass; fallback 30vh for initial render */
+    background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
+    animation-duration: 0.7s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    content: url("/DRANKHUNT/resources/sprites/dog/walk1.png") url("/DRANKHUNT/resources/sprites/dog/sniff1.png") url("/DRANKHUNT/resources/sprites/dog/jump1.png");
+}
+
+#dog2{
+    width: var(--dog-w);
+    height: var(--dog-h);
+    left: 180px;
+    bottom: calc(var(--ground-baseline, 30vh)); /* baseline: top of grass; fallback 30vh for initial render */
+}
+
+/* ...other CSS below remains unchanged... */
