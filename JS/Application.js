@@ -16,7 +16,9 @@ function launchApplication() {
         selectedMode = new ClassicGame(gameParameters);
     }
 
-    startScreen.hideStartScreen();
-    startScreen.stopMenuMusic();
-    selectedMode.startGame();
+startScreen.hideStartScreen();
+// don't stop the menu music immediately — user click is the gesture used to start playback
+// keep it playing so audio starts reliably. If you want to stop it later, do so with a deliberate call.
+// startScreen.stopMenuMusic();
+selectedMode.startGame();
 }
