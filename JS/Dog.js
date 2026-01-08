@@ -53,12 +53,15 @@ class Dog {
     const root = getComputedStyle(document.documentElement);
     const fg = (root.getPropertyValue('--fg-h') || '').trim();
     if (fg.endsWith('vh')) {
-      const vhValue = Math.round(window.innerHeight * parseFloat(fg) / 100);
-      if (vhValue > 0) return vhValue;
+      const parsed = parseFloat(fg);
+      if (!isNaN(parsed)) {
+        const vhValue = Math.round(window.innerHeight * parsed / 100);
+        if (vhValue > 0) return vhValue;
+      }
     }
     if (fg.endsWith('px')) {
       const pxValue = parseInt(fg, 10);
-      if (pxValue > 0) return pxValue;
+      if (!isNaN(pxValue) && pxValue > 0) return pxValue;
     }
 
     return Math.round(window.innerHeight * 0.30);
