@@ -9,6 +9,10 @@ class StartScreen{
         this.initializeModes();
         this.initializeButtons();
         this.displaySettingsForCurrentMode();
+
+        // Attempt to start menu music when the start screen is shown (user agents may block autoplay).
+        // This is safe: play() returns a promise — we swallow rejection to avoid console errors.
+        try { this.playMenuMusic(); } catch(e) { /* ignore */ }
     }
 
     initializeModes(){
