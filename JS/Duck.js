@@ -61,7 +61,7 @@ class Duck {
     this.currentWidth = 48;
     this.currentHeight = 20;
     this.moveToInitialPosition();
-    // Reveal duck only after it has been positioned for the round start
+    // Make duck visible after positioning
     $(this.duckId).css('visibility', 'visible');
   }
 
@@ -72,33 +72,20 @@ class Duck {
   }
 
   moveToInitialPosition() {
-    // Prefer measuring the actual .bushes visible height (works on iPhone Safari).
-    // Fallback to CSS var parsing if .bushes is not present.
-    var root = getComputedStyle(document.documentElement);
-    var duckElevRaw = root.getPropertyValue('--duck-elev').trim() || '0px';
-
-    function toPx(raw) {
-      if (!raw) return 0;
-      raw = raw.trim();
-      if (raw.endsWith('vh')) {
-        var vh = window.innerHeight;
-        var v = parseFloat(raw.slice(0, -2));
-        return Math.round((v / 100) * vh);
-      }
-      return parseInt(raw, 10) || 0;
-    }
-
-    var fgPx = 0;
-    var bushes = document.querySelector('.bushes');
-    if (bushes) {
-      fgPx = Math.round(bushes.getBoundingClientRect().height);
-    } else {
-      var fgRaw = root.getPropertyValue('--fg-h').trim() || '0px';
-      fgPx = toPx(fgRaw);
-    }
-
-    var duckElevPx = toPx(duckElevRaw);
-    var bottomPx = fgPx + duckElevPx;
+    // Measure the actual .bushes element height to compute the ground baseline in pixels
+    const bushes = document.querySelector('.bushes');
+    const groundBaselinePx = bushes ? bushes.getBoundingClientRect().height : 340;
+    
+    // Set the CSS custom property so CSS and other JS can use the measured pixel value
+    document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
+    
+    // Get duck elevation from CSS var
+    const root = getComputedStyle(document.documentElement);
+    const duckElevRaw = root.getPropertyValue('--duck-elev').trim();
+    const duckElevPx = parseInt(duckElevRaw, 10) || 80;
+    
+    // Set duck bottom so it's duckElevPx above the top of the grass
+    const bottomPx = groundBaselinePx + duckElevPx;
     $(this.duckId).css('bottom', bottomPx + 'px');
   }
 

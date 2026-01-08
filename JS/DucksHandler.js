@@ -40,7 +40,7 @@ class DucksHandler{
         this.numberOfDucks ++;
         let id = this.ducks.length;
         this.ducks.push(new Duck(id, this.duckMovesNumber));
-        $("#sky").append(`<div id="${id}" class="duck"></div>`);
+        $("#sky").append(`<div id="${id}" class="duck" style="visibility: hidden;"></div>`);
     }
 
     createDucks(){

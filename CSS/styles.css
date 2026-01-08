@@ -1,5 +1,6 @@
 :root {
   --fg-h: 340px; /* foreground height */
+  --ground-baseline: var(--fg-h); /* fallback baseline, JS will update to measured pixel value */
   --duck-w: 90px;
   --duck-h: 80px;
   --duck-elev: 80px; /* how much higher than ground the duck flies */
@@ -81,9 +82,7 @@ body{
 /* DUCK: anchored relative to the ground (foreground) — original baseline restored */
 .duck{
     left: 48%;
-    bottom: calc(var(--fg-h) + var(--duck-elev)); /* original baseline: top of grass + elevation */
-    /* hide ducks at initial paint; Duck.resurrect() will reveal them when positioned */
-    visibility: hidden;
+    bottom: calc(var(--ground-baseline) + var(--duck-elev)); /* baseline: top of grass + elevation */
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
@@ -104,7 +103,7 @@ body{
     height: var(--dog-h);
     z-index: 3;
     left: 20px;
-    bottom: calc(var(--fg-h)); /* original baseline: top of grass */
+    bottom: calc(var(--ground-baseline)); /* baseline: top of grass */
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -116,7 +115,7 @@ body{
     width: var(--dog-w);
     height: var(--dog-h);
     left: 180px;
-    bottom: calc(var(--fg-h)); /* original baseline: top of grass */
+    bottom: calc(var(--ground-baseline)); /* baseline: top of grass */
 }
 
 #pointsCounter{
@@ -144,21 +143,13 @@ body{
 /* Minimal mobile adjustments only (strict, per your request):
    - Keep the original visual system (no JS scaling, no new transform: scale, no math-heavy viewport calculations).
    - Make the ground visually larger (30vh) on small screens and keep it pinned to bottom.
-   - Slightly raise duck and dog on small screens so they sit on the grass visually.
+   - JS will measure the actual .bushes height and set --ground-baseline at runtime.
 */
 @media (max-width: 499px) {
   /* Make bushes/grass exactly 30vh on small screens, pinned to bottom */
   .bushes {
     height: 30vh;
     background-size: 100% 30vh;
-  }
-
-  /* On small screens bushes are 30vh. Keep bottoms anchored to that visual height. */
-  .duck {
-    bottom: calc(30vh + var(--duck-elev));
-  }
-  #dog1, #dog2 {
-    bottom: 30vh;
   }
 }
 
