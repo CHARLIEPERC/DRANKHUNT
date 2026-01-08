@@ -217,3 +217,12 @@ class ClassicGame extends Game{
         $("#sky").click(this.shoot.bind(this));
     }
 }
+// Set duck bottom so it's duckElevPx above the top of the grass
+const bottomPx = groundBaselinePx + duckElevPx;
+$(this.duckId).css('bottom', bottomPx + 'px');
+
+// Place duck off-screen horizontally so it flies into view.
+// Randomly choose left or right spawn side.
+const spawnFromLeft = Math.random() < 0.5;
+const initialLeftPercent = spawnFromLeft ? -10 : 110;
+$(this.duckId).css('left', initialLeftPercent + '%');
