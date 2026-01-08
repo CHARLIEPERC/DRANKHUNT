@@ -52,7 +52,8 @@ class Game{
             return;
         }
 
-        if (this.pointsHandler.level > this.maxLevel) {
+        // If we've reached or passed the configured max level, finish with a win.
+        if (this.pointsHandler.level >= this.maxLevel) {
             this.finishWin();
             return;
         }
