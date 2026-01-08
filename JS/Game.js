@@ -52,11 +52,19 @@ class Game{
             return;
         }
 
-        // If we've reached or passed the configured max level, finish with a win.
-        if (this.pointsHandler.level >= this.maxLevel) {
-            this.finishWin();
-            return;
-        }
+   --- a/JS/Game.js
++++ b/JS/Game.js
+@@
+-        if (this.pointsHandler.level > this.maxLevel) {
+-            this.finishWin();
+-            return;
+-        }
++        // If we've reached or passed the configured max level, finish with a win.
++        if (this.pointsHandler.level >= this.maxLevel) {
++            this.finishWin();
++            return;
++        }
+        
 
         this.newRoundTimeout = setTimeout(() => this.startNewRound(), 2000);
     }
