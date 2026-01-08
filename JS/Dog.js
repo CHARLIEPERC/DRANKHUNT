@@ -18,7 +18,129 @@ class Dog {
       "/DRANKHUNT/resources/sprites/dog/jump2.png"
     ];
   }
+// (Add the following methods to your existing Dog class file; keep the rest of Dog.js intact)
+// Method: liftGroundToDog(dogSelector, options)
+// - Computes the dog's visible bottom and raises the .bushes (foreground) height so the bushes top matches the dog's feet.
+// - Updates CSS --fg-h and --ground-baseline and forces .bushes height/background-size to match.
+// - options: { animate: true/false, animationMs: 300 }
+liftGroundToDog(dogSelector = '#dog1', options = { animate: true, animationMs: 300 }) {
+  const dogEl = document.querySelector(dogSelector);
+  const gameWrap = document.getElementById('gameWrap');
+  const bushes = document.querySelector('.bushes');
+  if (!dogEl || !gameWrap || !bushes) return null;
 
+  // dog bounding rect and wrapper rect
+  const dogRect = dogEl.getBoundingClientRect();
+  const gameRect = gameWrap.getBoundingClientRect();
+
+  // Pixel Y of dog's feet (bottom) relative to viewport
+  const dogFeetY = dogRect.bottom;
+
+  // We want bushesRect.top == dogFeetY.
+  // bushesRect.top = gameRect.top + (gameRect.height - fg_h)
+  // => fg_h = gameRect.height - (bushesRect.top - gameRect.top)
+  // so set fg_h = gameRect.height - (dogFeetY - gameRect.top)
+  let newFgH = Math.round(gameRect.height - (dogFeetY - gameRect.top));
+
+  // Clamp newFgH to reasonable range
+  const minFgH = 40; // avoid zero/negative
+  const maxFgH = Math.round(gameRect.height - 20); // keep some sky
+  newFgH = Math.max(minFgH, Math.min(maxFgH, newFgH));
+
+  // Update CSS variable and direct .bushes styles for immediate visual effect
+  const root = document.documentElement;
+  root.style.setProperty('--fg-h', `${newFgH}px`);
+
+  if (options.animate) {
+    // animate height and background-size using requestAnimationFrame -> simple easing
+    const startH = parseInt(getComputedStyle(bushes).height, 10);
+    const endH = newFgH;
+    const duration = Math.max(0, options.animationMs || 300);
+    const start = performance.now();
+    const step = (ts) => {
+      const t = Math.min(1, (ts - start) / duration);
+      const ease = (t < 0.5) ? 2 * t * t : -1 + (4 - 2 * t) * t; // easeInOutQuad-ish
+      const curH = Math.round(startH + (endH - startH) * ease);
+      bushes.style.height = `${curH}px`;
+      bushes.style.backgroundSize = `100% ${curH}px`;
+      if (t < 1) requestAnimationFrame(step);
+      else {
+        // ensure final applied; then recompute baseline
+        bushes.style.height = `${endH}px`;
+        bushes.style.backgroundSize = `100% ${endH}px`;
+        // update ground baseline variable and inline dog bottom
+        const baselinePx = this.getGroundBaselinePx();
+        root.style.setProperty('--ground-baseline', `${baselinePx}px`);
+        // recall any dog-offset logic you have: compute effective bottom as before
+        // reuse computeGroundBaseline to apply dog offset and inline bottom
+        if (typeof this.computeGroundBaseline === 'function') this.computeGroundBaseline();
+      }
+    };
+    requestAnimationFrame(step);
+  } else {
+    bushes.style.height = `${newFgH}px`;
+    bushes.style.backgroundSize = `100% ${newFgH}px`;
+    const baselinePx = this.getGroundBaselinePx();
+    root.style.setProperty('--ground-baseline', `${baselinePx}px`);
+    if (typeof this.computeGroundBaseline === 'function') this.computeGroundBaseline();
+  }
+
+  // Return the value for debugging
+  return { newFgH };
+}
+
+// Quick window helper for testing from console:
+// window.raiseGroundToDog(selector, animate)
+window.raiseGroundToDog = function (dogSelector = '#dog1', animate = true) {
+  try {
+    // If Dog class exists and there is an instance, prefer using its method
+    const dogInstance = window.game && window.game.dog1 ? window.game.dog1 : null;
+    if (dogInstance && typeof dogInstance.liftGroundToDog === 'function') {
+      return dogInstance.liftGroundToDog(dogSelector, { animate: !!animate, animationMs: 300 });
+    }
+    // Otherwise construct a simple one-off calculation (no JS class)
+    const dogEl = document.querySelector(dogSelector);
+    const gameWrap = document.getElementById('gameWrap');
+    const bushes = document.querySelector('.bushes');
+    if (!dogEl || !gameWrap || !bushes) return null;
+
+    const dogRect = dogEl.getBoundingClientRect();
+    const gameRect = gameWrap.getBoundingClientRect();
+    const dogFeetY = dogRect.bottom;
+    let newFgH = Math.round(gameRect.height - (dogFeetY - gameRect.top));
+    newFgH = Math.max(40, Math.min(Math.round(gameRect.height - 20), newFgH));
+
+    document.documentElement.style.setProperty('--fg-h', `${newFgH}px`);
+    if (animate) {
+      // simple CSS transition for quick test
+      bushes.style.transition = 'height 300ms ease, background-size 300ms ease';
+      bushes.style.height = `${newFgH}px`;
+      bushes.style.backgroundSize = `100% ${newFgH}px`;
+      setTimeout(() => { bushes.style.transition = ''; }, 350);
+    } else {
+      bushes.style.height = `${newFgH}px`;
+      bushes.style.backgroundSize = `100% ${newFgH}px`;
+    }
+
+    // recompute baseline (call existing computeGroundBaseline if available)
+    if (window.game && window.game.dog1 && typeof window.game.dog1.computeGroundBaseline === 'function') {
+      window.game.dog1.computeGroundBaseline();
+    } else {
+      const baseline = (gameRect.bottom - (gameRect.top + (gameRect.height - newFgH)));
+      document.documentElement.style.setProperty('--ground-baseline', `${Math.round(baseline)}px`);
+      // optionally adjust dog bottom inline
+      const currentDogOffsetRaw = getComputedStyle(document.documentElement).getPropertyValue('--dog-offset') || '6px';
+      const parsed = parseInt(currentDogOffsetRaw, 10) || 6;
+      const effectiveBottom = Math.max(0, Math.round(baseline) - parsed);
+      dogEl.style.bottom = `${effectiveBottom}px`;
+    }
+
+    return { newFgH };
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
   // Measure bushes and apply CSS variable + inline bottom for immediate anchoring.
   // Apply a small CSS-configurable offset so the dog's feet (visible pixels) align with the grass.
   computeGroundBaseline() {
