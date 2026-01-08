@@ -103,7 +103,7 @@ body{
     height: var(--dog-h);
     z-index: 3;
     left: 20px;
-    bottom: calc(var(--ground-baseline)); /* baseline: top of grass */
+    bottom: calc(var(--ground-baseline, 30vh)); /* baseline: top of grass; fallback 30vh for initial render */
     background-image: url("/DRANKHUNT/resources/sprites/dog/walk1.png");
     animation-duration: 0.7s;
     animation-iteration-count: 1;
@@ -115,7 +115,7 @@ body{
     width: var(--dog-w);
     height: var(--dog-h);
     left: 180px;
-    bottom: calc(var(--ground-baseline)); /* baseline: top of grass */
+    bottom: calc(var(--ground-baseline, 30vh)); /* baseline: top of grass; fallback 30vh for initial render */
 }
 
 #pointsCounter{
@@ -152,5 +152,3 @@ body{
     background-size: 100% 30vh;
   }
 }
-
-/* keep the rest of the CSS in place (bar.css handles HUD specifics) */
