@@ -20,47 +20,20 @@ class Dog {
     ];
   }
 
-  // Returns a positive pixel value for the ground baseline. Only accepts a non-zero
-  // measured .bushes height. Falls back to CSS --fg-h (vh/px) or 30vh.
-  getGroundBaselinePx() {
+  // Measure bushes and apply CSS variable + inline bottom for immediate anchoring.
+  computeGroundBaseline() {
     const bushes = document.querySelector('.bushes');
-    if (bushes) {
-      const h = Math.round(bushes.getBoundingClientRect().height);
-      if (h > 0) return h; // IMPORTANT: only accept non-zero
-    }
-
-    const root = getComputedStyle(document.documentElement);
-    const fg = (root.getPropertyValue('--fg-h') || '').trim();
-    if (fg.endsWith('vh')) {
-      return Math.round(window.innerHeight * parseFloat(fg) / 100);
-    }
-    if (fg.endsWith('px')) {
-      const parsed = parseInt(fg, 10);
-      if (parsed > 0) return parsed;
-    }
-
-    // final fallback: 30vh
-    return Math.round(window.innerHeight * 0.30);
-  }
-
-  // Position dog on grass using measured baseline; set CSS var so other code/CSS can use it.
-  positionDogOnGrass() {
-    const ground = this.getGroundBaselinePx();
-    if (ground <= 0) return; // guard: nothing to do if still 0
-
-    // set CSS var with px unit so existing calc(var(--ground-baseline)) works
-    document.documentElement.style.setProperty('--ground-baseline', `${ground}px`);
-
-    // ensure dog is anchored immediately
-    $(this.dogId).css({ bottom: ground + 'px', top: '', transform: '' });
+    const groundBaselinePx = bushes ? Math.round(bushes.getBoundingClientRect().height) : 340;
+    // Ensure CSS var includes unit
+    document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
+    // Also set inline bottom on the dog element so it's positioned immediately
+    $(this.dogId).css('bottom', `${groundBaselinePx}px`);
+    return groundBaselinePx;
   }
 
   launchWalkoutAnimation() {
-    // Try to position after layout: requestAnimationFrame + short timeouts to retry
-    const apply = () => this.positionDogOnGrass();
-    requestAnimationFrame(apply);
-    setTimeout(apply, 50);
-    setTimeout(apply, 200);
+    // Ensure baseline is measured and dog is anchored before animations start
+    const groundBaselinePx = this.computeGroundBaseline();
 
     let stopBackground = "url(/DRANKHUNT/resources/sprites/dog/found.png)";
 
@@ -116,15 +89,10 @@ class Dog {
       $(this.dogId).css("backgroundImage", 'url(/DRANKHUNT/resources/sprites/dog/gotTwo.png)');
     }
 
-    // Ensure dog is positioned after layout; same retry pattern as walkout
-    const apply = () => this.positionDogOnGrass();
-    requestAnimationFrame(apply);
-    setTimeout(apply, 50);
-    setTimeout(apply, 200);
+    // Reuse same measurement helper so baseline is accurate when the dog comes out
+    const groundBaselinePx = this.computeGroundBaseline();
 
-    // Now proceed with the sniff/jump animation relative to the measured baseline
-    const groundBaselinePx = this.getGroundBaselinePx();
-
+    // Get dog height from CSS var
     const root = getComputedStyle(document.documentElement);
     const dogRaw = root.getPropertyValue('--dog-h').trim();
     const dogPx = parseInt(dogRaw, 10) || 56;
@@ -132,9 +100,9 @@ class Dog {
     const sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
 
     $(this.dogId)
-      .css('bottom', groundBaselinePx + 'px')
-      .animate({ bottom: (groundBaselinePx - sniffLiftPx) + 'px' }, 600)
-      .animate({ bottom: (groundBaselinePx - sniffLiftPx) + 'px' }, 800)
-      .animate({ bottom: groundBaselinePx + 'px' }, 600);
+      .css('bottom', `${groundBaselinePx}px`)
+      .animate({ bottom: `${groundBaselinePx - sniffLiftPx}px` }, 600)
+      .animate({ bottom: `${groundBaselinePx - sniffLiftPx}px` }, 800)
+      .animate({ bottom: `${groundBaselinePx}px` }, 600);
   }
 }
