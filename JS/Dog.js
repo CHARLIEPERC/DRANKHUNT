@@ -54,7 +54,7 @@ class Dog {
     const fg = (root.getPropertyValue('--fg-h') || '').trim();
     if (fg.endsWith('vh')) {
       const parsed = parseFloat(fg);
-      if (!isNaN(parsed)) {
+      if (!isNaN(parsed) && parsed > 0) {
         const vhValue = Math.round(window.innerHeight * parsed / 100);
         if (vhValue > 0) return vhValue;
       }
@@ -64,7 +64,9 @@ class Dog {
       if (!isNaN(pxValue) && pxValue > 0) return pxValue;
     }
 
-    return Math.round(window.innerHeight * 0.30);
+    // final fallback: 30vh of viewport height, with minimum of 100px
+    const fallbackValue = Math.round(window.innerHeight * 0.30);
+    return fallbackValue > 0 ? fallbackValue : 100;
   }
 
   launchWalkoutAnimation() {
