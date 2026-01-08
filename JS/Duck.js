@@ -49,11 +49,14 @@ class Duck {
     };
   }
 
-  startFlight() {
-    this.resurrect();
-    this.startFrameAnimation();
-    this.duckFlight = setInterval(() => this.fly(), 1000);
-  }
+startFlight() {
+  this.resurrect();
+  this.startFrameAnimation();
+  // Immediately perform the first flight step so ducks don't sit in the centre.
+  this.fly();
+  // Continue flying on the existing cadence (no speed/behavior change).
+  this.duckFlight = setInterval(() => this.fly(), 1000);
+}
 
   resurrect() {
     this.isAlive = true;
