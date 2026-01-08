@@ -82,6 +82,8 @@ body{
 .duck{
     left: 48%;
     bottom: calc(var(--fg-h) + var(--duck-elev)); /* original baseline: top of grass + elevation */
+    /* hide ducks at initial paint; Duck.resurrect() will reveal them when positioned */
+    visibility: hidden;
     background-image: url("/DRANKHUNT/resources/sprites/duck/png/left1.png");
     position: absolute;
     animation-timing-function: linear;
@@ -151,15 +153,12 @@ body{
     background-size: 100% 30vh;
   }
 
-  /* Raise duck by +18px on small screens to sit visually on the grass */
+  /* On small screens bushes are 30vh. Keep bottoms anchored to that visual height. */
   .duck {
-    bottom: calc(var(--fg-h) + var(--duck-elev) + 18px);
+    bottom: calc(30vh + var(--duck-elev));
   }
-
-  /* Raise dogs by +12px on small screens to sit visually on the grass */
-  #dog1,
-  #dog2 {
-    bottom: calc(var(--fg-h) + 12px);
+  #dog1, #dog2 {
+    bottom: 30vh;
   }
 }
 

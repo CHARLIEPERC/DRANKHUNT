@@ -61,6 +61,8 @@ class Duck {
     this.currentWidth = 48;
     this.currentHeight = 20;
     this.moveToInitialPosition();
+    // Reveal duck only after it has been positioned for the round start
+    $(this.duckId).css('visibility', 'visible');
   }
 
   stopFlightAnimation() {
@@ -70,12 +72,11 @@ class Duck {
   }
 
   moveToInitialPosition() {
-    // Compute pixel bottom from CSS vars so the duck baseline is anchored to the foreground.
+    // Prefer measuring the actual .bushes visible height (works on iPhone Safari).
+    // Fallback to CSS var parsing if .bushes is not present.
     var root = getComputedStyle(document.documentElement);
-    var fgRaw = root.getPropertyValue('--fg-h').trim();       // e.g. "30vh" or "340px"
-    var duckElevRaw = root.getPropertyValue('--duck-elev').trim(); // e.g. "80px"
+    var duckElevRaw = root.getPropertyValue('--duck-elev').trim() || '0px';
 
-    // Convert possible 'vh' to px if necessary; fallback to numeric parse for px values
     function toPx(raw) {
       if (!raw) return 0;
       raw = raw.trim();
@@ -87,10 +88,16 @@ class Duck {
       return parseInt(raw, 10) || 0;
     }
 
-    var fgPx = toPx(fgRaw);
-    var duckElevPx = toPx(duckElevRaw);
+    var fgPx = 0;
+    var bushes = document.querySelector('.bushes');
+    if (bushes) {
+      fgPx = Math.round(bushes.getBoundingClientRect().height);
+    } else {
+      var fgRaw = root.getPropertyValue('--fg-h').trim() || '0px';
+      fgPx = toPx(fgRaw);
+    }
 
-    // Set duck bottom so it's duckElevPx above the top of the grass (fgPx)
+    var duckElevPx = toPx(duckElevRaw);
     var bottomPx = fgPx + duckElevPx;
     $(this.duckId).css('bottom', bottomPx + 'px');
   }
