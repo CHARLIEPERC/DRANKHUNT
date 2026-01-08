@@ -19,7 +19,21 @@ class Dog {
     ];
   }
 
+  // Measure bushes and apply CSS variable + inline bottom for immediate anchoring.
+  computeGroundBaseline() {
+    const bushes = document.querySelector('.bushes');
+    const groundBaselinePx = bushes ? Math.round(bushes.getBoundingClientRect().height) : 340;
+    // Ensure CSS var includes unit
+    document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
+    // Also set inline bottom on the dog element so it's positioned immediately
+    $(this.dogId).css('bottom', `${groundBaselinePx}px`);
+    return groundBaselinePx;
+  }
+
   launchWalkoutAnimation() {
+    // Ensure baseline is measured and dog is anchored before animations start
+    const groundBaselinePx = this.computeGroundBaseline();
+
     let stopBackground = "url(/DRANKHUNT/resources/sprites/dog/found.png)";
 
     $(this.dogId)
@@ -74,13 +88,9 @@ class Dog {
       $(this.dogId).css("backgroundImage", 'url(/DRANKHUNT/resources/sprites/dog/gotTwo.png)');
     }
 
-    // Measure the actual .bushes element height to compute the ground baseline in pixels
-    const bushes = document.querySelector('.bushes');
-    const groundBaselinePx = bushes ? bushes.getBoundingClientRect().height : 340;
-    
-    // Set the CSS custom property so CSS and other JS can use the measured pixel value
-    document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
-    
+    // Reuse same measurement helper so baseline is accurate when the dog comes out
+    const groundBaselinePx = this.computeGroundBaseline();
+
     // Get dog height from CSS var
     const root = getComputedStyle(document.documentElement);
     const dogRaw = root.getPropertyValue('--dog-h').trim();
