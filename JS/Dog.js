@@ -106,3 +106,59 @@ class Dog {
       .animate({ bottom: `${groundBaselinePx}px` }, 600);
   }
 }
+*** Begin Patch
+*** Update File: JS/Dog.js
+@@
+-  // Returns a positive pixel value for the ground baseline.
+-  // Only accepts a non-zero measured .bushes height. Falls back to CSS --fg-h (vh/px) or 30vh.
+-  getGroundBaselinePx() {
+-    const bushes = document.querySelector('.bushes');
+-    if (bushes) {
+-      const h = Math.round(bushes.getBoundingClientRect().height);
+-      if (h > 0) return h; // IMPORTANT: only accept non-zero
+-    }
+-
+-    const root = getComputedStyle(document.documentElement);
+-    const fg = (root.getPropertyValue('--fg-h') || '').trim();
+-    if (fg.endsWith('vh')) {
+-      return Math.round(window.innerHeight * parseFloat(fg) / 100);
+-    }
+-    if (fg.endsWith('px')) {
+-      return parseInt(fg, 10) || 0;
+-    }
+-
+-    // final fallback: 30vh of viewport height
+-    return Math.round(window.innerHeight * 0.30);
+-  }
++  // Returns a positive pixel value for the ground baseline.
++  // Measure the distance from the top of .bushes to the bottom of #gameWrap so the dog paws sit on the grass edge.
++  getGroundBaselinePx() {
++    const bushes = document.querySelector('.bushes');
++    const gameWrap = document.getElementById('gameWrap');
++
++    if (bushes && gameWrap) {
++      const bushesRect = bushes.getBoundingClientRect();
++      const gameWrapRect = gameWrap.getBoundingClientRect();
++
++      // baseline = distance from top of bushes to bottom of gameWrap (so dogs sit on bushes top)
++      const baselinePx = Math.round(gameWrapRect.bottom - bushesRect.top);
++
++      // sanity: baseline must be positive and less than the total gameWrap height
++      if (baselinePx > 0 && baselinePx < Math.round(gameWrapRect.height)) {
++        return baselinePx;
++      }
++    }
++
++    // fallback: previous behavior — use CSS var --fg-h (vh/px) or 30vh
++    const root = getComputedStyle(document.documentElement);
++    const fg = (root.getPropertyValue('--fg-h') || '').trim();
++    if (fg.endsWith('vh')) {
++      return Math.round(window.innerHeight * parseFloat(fg) / 100);
++    }
++    if (fg.endsWith('px')) {
++      return parseInt(fg, 10) || 0;
++    }
++
++    return Math.round(window.innerHeight * 0.30);
++  }
+*** End Patch
