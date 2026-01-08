@@ -1,4 +1,5 @@
 class Dog {
+
   constructor(id) {
     this.dogId = `#${id}`;
     this.spriteTimer = null;
@@ -18,9 +19,14 @@ class Dog {
     ];
   }
 
+  // Measure bushes and apply CSS variable + inline bottom for immediate anchoring.
+  // Apply a small CSS-configurable offset so the dog's feet (visible pixels) align with the grass.
   computeGroundBaseline() {
     const groundBaselinePx = this.getGroundBaselinePx();
+    // Ensure CSS var includes unit
     document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
+
+    // read dog offset from css var --dog-offset (defaults to 6px)
     const root = getComputedStyle(document.documentElement);
     const dogOffsetRaw = (root.getPropertyValue('--dog-offset') || '').trim();
     let dogOffsetPx = 6;
@@ -31,22 +37,33 @@ class Dog {
       const parsed = parseFloat(dogOffsetRaw);
       if (!isNaN(parsed)) dogOffsetPx = Math.round(window.innerHeight * parsed / 100);
     }
+
+    // Also set inline bottom on the dog element so it's positioned immediately (apply offset to align feet)
     const effectiveBottom = Math.max(0, groundBaselinePx - dogOffsetPx);
     $(this.dogId).css('bottom', `${effectiveBottom}px`);
     return groundBaselinePx;
   }
 
+  // Returns a positive pixel value for the ground baseline.
+  // Measure the distance from the top of .bushes to the bottom of #gameWrap so the dog paws sit on the grass edge.
   getGroundBaselinePx() {
     const bushes = document.querySelector('.bushes');
     const gameWrap = document.getElementById('gameWrap');
+
     if (bushes && gameWrap) {
       const bushesRect = bushes.getBoundingClientRect();
       const gameWrapRect = gameWrap.getBoundingClientRect();
+
+      // baseline = distance from top of bushes to bottom of gameWrap (so dogs sit on bushes top)
       const baselinePx = Math.round(gameWrapRect.bottom - bushesRect.top);
+
+      // sanity: baseline must be positive and less than the total gameWrap height
       if (baselinePx > 0 && baselinePx < Math.round(gameWrapRect.height)) {
         return baselinePx;
       }
     }
+
+    // fallback: previous behavior — use CSS var --fg-h (vh/px) or 30vh
     const root = getComputedStyle(document.documentElement);
     const fg = (root.getPropertyValue('--fg-h') || '').trim();
     if (fg.endsWith('vh')) {
@@ -60,13 +77,18 @@ class Dog {
       const pxValue = parseInt(fg, 10);
       if (!isNaN(pxValue) && pxValue > 0) return pxValue;
     }
+
+    // final fallback: 30vh of viewport height, with minimum of 100px
     const fallbackValue = Math.round(window.innerHeight * 0.30);
     return fallbackValue > 0 ? fallbackValue : 100;
   }
 
   launchWalkoutAnimation() {
+    // Ensure baseline is measured and dog is anchored before animations start
     const groundBaselinePx = this.computeGroundBaseline();
+
     let stopBackground = "url(/DRANKHUNT/resources/sprites/dog/found.png)";
+
     $(this.dogId)
       .animate({ left: "20%" }, 2000, function () {
         this.startSpriteAnimation(this.sniffFrames, 200);
@@ -110,6 +132,7 @@ class Dog {
 
   showDogWithKilledDucks(killedDucks) {
     this.stopSpriteAnimation();
+
     if (killedDucks == 0) {
       $(this.dogId).css("backgroundImage", 'url(/DRANKHUNT/resources/sprites/dog/bkztypa1.png)');
     } else if (killedDucks == 1) {
@@ -117,10 +140,16 @@ class Dog {
     } else {
       $(this.dogId).css("backgroundImage", 'url(/DRANKHUNT/resources/sprites/dog/gotTwo.png)');
     }
+
+    // Reuse same measurement helper so baseline is accurate when the dog comes out
     const groundBaselinePx = this.computeGroundBaseline();
+
+    // Get dog height from CSS var
     const root = getComputedStyle(document.documentElement);
     const dogRaw = root.getPropertyValue('--dog-h').trim();
     const dogPx = parseInt(dogRaw, 10) || 56;
+
+    // read dog offset from css var --dog-offset (defaults to 6px)
     const dogOffsetRaw = (root.getPropertyValue('--dog-offset') || '').trim();
     let dogOffsetPx = 6;
     if (dogOffsetRaw.endsWith('px')) {
@@ -130,98 +159,14 @@ class Dog {
       const parsed = parseFloat(dogOffsetRaw);
       if (!isNaN(parsed)) dogOffsetPx = Math.round(window.innerHeight * parsed / 100);
     }
+
     const effectiveBottom = Math.max(0, groundBaselinePx - dogOffsetPx);
-    const sniffLiftPx = Math.round(dogPx * 0.6);
+    const sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
+
     $(this.dogId)
       .css('bottom', `${effectiveBottom}px`)
       .animate({ bottom: `${effectiveBottom - sniffLiftPx}px` }, 600)
       .animate({ bottom: `${effectiveBottom - sniffLiftPx}px` }, 800)
       .animate({ bottom: `${effectiveBottom}px` }, 600);
   }
-
-  // New helper: liftGroundToDog(dogSelector, options)
-  liftGroundToDog(dogSelector = '#dog1', options = { animate: true, animationMs: 300 }) {
-    const dogEl = document.querySelector(dogSelector);
-    const gameWrap = document.getElementById('gameWrap');
-    const bushes = document.querySelector('.bushes');
-    if (!dogEl || !gameWrap || !bushes) return null;
-    const dogRect = dogEl.getBoundingClientRect();
-    const gameRect = gameWrap.getBoundingClientRect();
-    const dogFeetY = dogRect.bottom;
-    let newFgH = Math.round(gameRect.height - (dogFeetY - gameRect.top));
-    const minFgH = 40;
-    const maxFgH = Math.round(gameRect.height - 20);
-    newFgH = Math.max(minFgH, Math.min(maxFgH, newFgH));
-    const root = document.documentElement;
-    root.style.setProperty('--fg-h', `${newFgH}px`);
-    if (options.animate) {
-      const startH = parseInt(getComputedStyle(bushes).height, 10);
-      const endH = newFgH;
-      const duration = Math.max(0, options.animationMs || 300);
-      const start = performance.now();
-      const step = (ts) => {
-        const t = Math.min(1, (ts - start) / duration);
-        const ease = (t < 0.5) ? 2 * t * t : -1 + (4 - 2 * t) * t;
-        const curH = Math.round(startH + (endH - startH) * ease);
-        bushes.style.height = `${curH}px`;
-        bushes.style.backgroundSize = `100% ${curH}px`;
-        if (t < 1) requestAnimationFrame(step);
-        else {
-          bushes.style.height = `${endH}px`;
-          bushes.style.backgroundSize = `100% ${endH}px`;
-          const baselinePx = this.getGroundBaselinePx();
-          root.style.setProperty('--ground-baseline', `${baselinePx}px`);
-          if (typeof this.computeGroundBaseline === 'function') this.computeGroundBaseline();
-        }
-      };
-      requestAnimationFrame(step);
-    } else {
-      bushes.style.height = `${newFgH}px`;
-      bushes.style.backgroundSize = `100% ${newFgH}px`;
-      const baselinePx = this.getGroundBaselinePx();
-      root.style.setProperty('--ground-baseline', `${baselinePx}px`);
-      if (typeof this.computeGroundBaseline === 'function') this.computeGroundBaseline();
-    }
-    return { newFgH };
-  }
-}
-
-// attach helper to window if available
-if (typeof window !== 'undefined') {
-  window.raiseGroundToDog = function (dogSelector = '#dog1', animate = true) {
-    try {
-      const dogInstance = window.game && window.game.dog1 ? window.game.dog1 : null;
-      if (dogInstance && typeof dogInstance.liftGroundToDog === 'function') {
-        return dogInstance.liftGroundToDog(dogSelector, { animate: !!animate, animationMs: 300 });
-      }
-      const dogEl = document.querySelector(dogSelector);
-      const gameWrap = document.getElementById('gameWrap');
-      const bushes = document.querySelector('.bushes');
-      if (!dogEl || !gameWrap || !bushes) return null;
-      const dogRect = dogEl.getBoundingClientRect();
-      const gameRect = gameWrap.getBoundingClientRect();
-      const dogFeetY = dogRect.bottom;
-      let newFgH = Math.round(gameRect.height - (dogFeetY - gameRect.top));
-      newFgH = Math.max(40, Math.min(Math.round(gameRect.height - 20), newFgH));
-      document.documentElement.style.setProperty('--fg-h', `${newFgH}px`);
-      bushes.style.transition = animate ? 'height 300ms ease, background-size 300ms ease' : '';
-      bushes.style.height = `${newFgH}px`;
-      bushes.style.backgroundSize = `100% ${newFgH}px`;
-      setTimeout(() => { bushes.style.transition = ''; }, 350);
-      if (window.game && window.game.dog1 && typeof window.game.dog1.computeGroundBaseline === 'function') {
-        window.game.dog1.computeGroundBaseline();
-      } else {
-        const baseline = (gameRect.bottom - (gameRect.top + (gameRect.height - newFgH)));
-        document.documentElement.style.setProperty('--ground-baseline', `${Math.round(baseline)}px`);
-        const currentDogOffsetRaw = getComputedStyle(document.documentElement).getPropertyValue('--dog-offset') || '6px';
-        const parsed = parseInt(currentDogOffsetRaw, 10) || 6;
-        const effectiveBottom = Math.max(0, Math.round(baseline) - parsed);
-        dogEl.style.bottom = `${effectiveBottom}px`;
-      }
-      return { newFgH };
-    } catch (e) {
-      console.error(e);
-      return null;
-    }
-  };
 }
