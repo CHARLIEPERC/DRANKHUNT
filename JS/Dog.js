@@ -99,9 +99,9 @@ class Dog {
     const sniffLiftPx = Math.round(dogPx * 0.6); // lift amount for sniff/walk animation (tweakable)
 
     $(this.dogId)
-      .css('bottom', groundBaselinePx + 'px')
-      .animate({ bottom: (groundBaselinePx - sniffLiftPx) + 'px' }, 600)
-      .animate({ bottom: (groundBaselinePx - sniffLiftPx) + 'px' }, 800)
-      .animate({ bottom: groundBaselinePx + 'px' }, 600);
+      .css('bottom', `${groundBaselinePx}px`)
+      .animate({ bottom: `${groundBaselinePx - sniffLiftPx}px` }, 600)
+      .animate({ bottom: `${groundBaselinePx - sniffLiftPx}px` }, 800)
+      .animate({ bottom: `${groundBaselinePx}px` }, 600);
   }
 }
