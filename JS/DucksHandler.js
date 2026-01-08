@@ -37,11 +37,11 @@ class DucksHandler{
     }
 
     createNewDuck(){
-        this.numberOfDucks ++;
-        let id = this.ducks.length;
-        this.ducks.push(new Duck(id, this.duckMovesNumber));
-        $("#sky").append(`<div id="${id}" class="duck" style="visibility: hidden;"></div>`);
-    }
+     this.numberOfDucks ++;
+let id = this.ducks.length;
+// append DOM element first so Duck can measure & position itself reliably
+$("#sky").append(`<div id="${id}" class="duck" style="visibility: hidden;"></div>`);
+this.ducks.push(new Duck(id, this.duckMovesNumber));
 
     createDucks(){
         for (let i = 0; i < this.initialDucksNumber; i++) {
