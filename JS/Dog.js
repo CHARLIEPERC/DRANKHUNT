@@ -34,7 +34,8 @@ class Dog {
       return Math.round(window.innerHeight * parseFloat(fg) / 100);
     }
     if (fg.endsWith('px')) {
-      return parseInt(fg, 10) || 0;
+      const parsed = parseInt(fg, 10);
+      if (parsed > 0) return parsed;
     }
 
     // final fallback: 30vh
@@ -44,7 +45,7 @@ class Dog {
   // Position dog on grass using measured baseline; set CSS var so other code/CSS can use it.
   positionDogOnGrass() {
     const ground = this.getGroundBaselinePx();
-    if (!ground || ground <= 0) return; // guard: nothing to do if still 0
+    if (ground <= 0) return; // guard: nothing to do if still 0
 
     // set CSS var with px unit so existing calc(var(--ground-baseline)) works
     document.documentElement.style.setProperty('--ground-baseline', `${ground}px`);
