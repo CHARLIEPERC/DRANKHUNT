@@ -1,24 +1,29 @@
 var startScreen = new StartScreen();
 
 function launchApplication() {
-    startScreen.playMenuMusic();
+  // Play menu music on start screen (existing behavior)
+  startScreen.playMenuMusic();
 
-    let gameParameters = startScreen.getGameParametersFromUserSelect();
-    let selectedModeName = gameParameters.modeName;
-    let selectedMode;
+  let gameParameters = startScreen.getGameParametersFromUserSelect();
+  let selectedModeName = gameParameters.modeName;
+  let selectedMode;
 
-    if (selectedModeName === "EXTREME") {
-        selectedMode = new ExtremeGame(gameParameters);
-    } else if (selectedModeName === "MODERN") {
-        selectedMode = new ModernGame(gameParameters);
-    } else {
-        selectedMode = new ClassicGame(gameParameters);
-    }
+  if (selectedModeName === "EXTREME") {
+    selectedMode = new ExtremeGame(gameParameters);
+  } else if (selectedModeName === "MODERN") {
+    selectedMode = new ModernGame(gameParameters);
+  } else {
+    selectedMode = new ClassicGame(gameParameters);
+  }
 
-startScreen.hideStartScreen();
-startScreen.stopMenuMusic();
+  startScreen.hideStartScreen();
 
-window.showBootIntro({
-  logoSrc: "resources/sprites/slumpedboy-logo.png",
-  onDone: () => selectedMode.startGame()
-});
+  // Stop menu music once gameplay is about to begin
+  startScreen.stopMenuMusic();
+
+  // Show boot intro, then start game
+  window.showBootIntro({
+    logoSrc: "resources/sprites/slumpedboy-logo.png",
+    onDone: () => selectedMode.startGame()
+  });
+}
