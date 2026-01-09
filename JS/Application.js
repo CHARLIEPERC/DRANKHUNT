@@ -3,8 +3,6 @@
 var startScreen = new StartScreen();
 
 window.launchApplication = function () {
-  ...
-};
   // Read selected mode
   const gameParameters = startScreen.getGameParametersFromUserSelect();
   const mode = gameParameters.modeName;
@@ -24,4 +22,4 @@ window.launchApplication = function () {
 
   // Start gameplay
   game.startGame();
-}
+};
