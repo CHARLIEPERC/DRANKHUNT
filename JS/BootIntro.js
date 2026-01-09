@@ -1,7 +1,4 @@
 // JS/BootIntro.js
-// Minimal Game Boy-style boot intro overlay.
-// Call showBootIntro({ logoSrc, onDone }) from Application.js.
-
 (function () {
   function el(tag, attrs = {}, parent) {
     const node = document.createElement(tag);
@@ -14,64 +11,23 @@
     return node;
   }
 
-  function playTwoNoteChime() {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-
-    const ctx = new AudioCtx();
-    const now = ctx.currentTime;
-
-    const master = ctx.createGain();
-    master.gain.value = 0.06;
-    master.connect(ctx.destination);
-
-    const o = ctx.createOscillator();
-    o.type = "square";
-
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, now);
-    g.connect(master);
-
-    o.connect(g);
-
-    const f1 = 659.25; // E5
-    const f2 = 987.77; // B5
-
-    o.frequency.setValueAtTime(f1, now);
-    g.gain.exponentialRampToValueAtTime(0.06, now + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-
-    o.frequency.setValueAtTime(f2, now + 0.14);
-    g.gain.exponentialRampToValueAtTime(0.06, now + 0.15);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
-
-    o.start(now);
-    o.stop(now + 0.35);
-
-    o.onended = () => ctx.close().catch(() => {});
-  }
-
   function playBootAudio(src) {
-  try {
-    const a = new Audio("resources/sounds/boot.mp3");
-    a.volume = 0.9;
-    a.currentTime = 0;
-    a.play().catch(() => {});
-    return a;
-  } catch (e) {
-    return null;
-  }
-}
-
-  function showBootIntro({ logoSrc, onDone }) {
-    // If already shown, just continue.
-    if (window.__BOOT_INTRO_DONE__) {
-      onDone && onDone();
-      return;
+    try {
+      const a = new Audio(src);
+      a.volume = 0.9;
+      a.currentTime = 0;
+      a.play().catch(() => {});
+      return a;
+    } catch (_) {
+      return null;
     }
-    window.__BOOT_INTRO_DONE__ = true;
+  }
 
-    // Overlay
+  function showBootIntro({ logoSrc, audioSrc, onDone }) {
+    // Always safe to call. If one exists, remove it.
+    const existing = document.getElementById("gb-boot");
+    if (existing) existing.remove();
+
     const overlay = el("div", { id: "gb-boot" }, document.body);
     overlay.style.position = "fixed";
     overlay.style.inset = "0";
@@ -79,35 +35,12 @@
     overlay.style.display = "flex";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
-    overlay.style.background = "#ffffff"; // pure white background
+    overlay.style.background = "#ffffff";
     overlay.style.imageRendering = "pixelated";
     overlay.style.userSelect = "none";
     overlay.style.touchAction = "manipulation";
 
-    // Play chime on first user interaction only (browser-safe).
-let audioStarted = false;
-overlay.addEventListener(
-  "pointerdown",
-  () => {
-    if (audioStarted) return;
-    audioStarted = true;
-
-    // Play your boot sound (MP3/WAV) + optional chime
-    playBootAudio("resources/sounds/boot.mp3");
-    // playTwoNoteChime(); // keep this if you want both
-  },
-  { once: true }
-);
-
-
-    // Flicker layer (very subtle, optional)
-    const flicker = el("div", {}, overlay);
-    flicker.style.position = "absolute";
-    flicker.style.inset = "0";
-    flicker.style.pointerEvents = "none";
-    flicker.style.opacity = "0.0";
-
-    // Logo
+    // Logo container
     const logoWrap = el("div", {}, overlay);
     logoWrap.style.position = "relative";
     logoWrap.style.transform = "translateY(-10px)";
@@ -118,16 +51,19 @@ overlay.addEventListener(
     img.style.maxWidth = "70vw";
     img.style.height = "auto";
     img.style.imageRendering = "pixelated";
-    img.style.opacity = "1"; // visible immediately
-    img.style.filter = "grayscale(100%)"; // start monochrome
+    img.style.opacity = "1";
+    img.style.filter = "grayscale(100%)";
 
-    // Color sweep overlay
+    // Sweep
     const sweep = el("div", {}, logoWrap);
     sweep.style.position = "absolute";
     sweep.style.inset = "0";
     sweep.style.pointerEvents = "none";
+    sweep.style.opacity = "1";
+    sweep.style.filter = "saturate(2.4) contrast(1.2)";
+    sweep.style.mixBlendMode = "screen";
 
-    // Mask sweep to logo pixels (color only appears on the letters)
+    // Mask sweep to letters only
     sweep.style.webkitMaskImage = `url(${logoSrc})`;
     sweep.style.webkitMaskRepeat = "no-repeat";
     sweep.style.webkitMaskPosition = "center";
@@ -137,25 +73,18 @@ overlay.addEventListener(
     sweep.style.maskPosition = "center";
     sweep.style.maskSize = "contain";
 
-    // Bright color pass
-    sweep.style.opacity = "1";
-    sweep.style.filter = "saturate(2.4) contrast(1.2)";
-    sweep.style.mixBlendMode = "screen";
+    // Audio will start only if this is called from a user gesture (Start click)
+    if (audioSrc) playBootAudio(audioSrc);
 
-    // Run animation immediately (no click required)
+    // Duration tuning
     let step = 0;
-    const steps = 120;     // more steps = slower
-    const tickMs = 40;    // slower speed
+    const steps = 120; // longer sweep
+    const tickMs = 40;
 
     const interval = setInterval(() => {
       step++;
-
-      // subtle flicker (you can reduce more or remove)
-      flicker.style.opacity = (Math.random() * 0.02).toFixed(3);
-
       const pct = Math.min(100, Math.round((step / steps) * 100));
 
-      // Bright rainbow highlight passing through text only
       sweep.style.background = `linear-gradient(
         to right,
         rgba(255,0,0,0) 0%,
@@ -167,37 +96,20 @@ overlay.addEventListener(
         rgba(180,0,255,1) 88%,
         rgba(180,0,255,0) 100%
       )`;
-
       sweep.style.backgroundSize = "320% 100%";
       sweep.style.backgroundPosition = `${100 - pct}% 0%`;
 
       if (step >= steps) {
         clearInterval(interval);
-
-        flicker.style.opacity = "0";
         sweep.style.opacity = "0";
-        img.style.filter = "none"; // solid logo at end
-
+        img.style.filter = "none";
         setTimeout(() => {
           overlay.remove();
-          onDone && onDone();
+          if (typeof onDone === "function") onDone();
         }, 140);
       }
     }, tickMs);
   }
 
-  // expose globally
   window.showBootIntro = showBootIntro;
-
-  // Auto-run boot intro before showing the start screen
-    const ss = document.getElementById("startScreen");
-    if (ss) ss.classList.add("is-hidden");
-
-    window.showBootIntro({
-      logoSrc: "resources/sprites/slumpedboy-logo.png",
-      onDone: () => {
-        if (ss) ss.classList.remove("is-hidden");
-      }
-    });
-  });
 })();
