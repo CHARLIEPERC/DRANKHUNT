@@ -1,3 +1,17 @@
+function playBootAudioOnce(src) {
+  if (!src) return;
+  if (window.__BOOT_AUDIO_PLAYED__) return;
+  window.__BOOT_AUDIO_PLAYED__ = true;
+
+  try {
+    const a = new Audio(src);
+    a.preload = "auto";
+    a.volume = 1.0;
+    a.play().catch(() => {});
+  } catch (e) {}
+}
+
+
 // JS/BootIntro.js
 (function () {
   function el(tag, attrs = {}, parent) {
