@@ -78,14 +78,15 @@ table{
 
 /* SHOOT BLOCKER */
 
-#shootBlocker{
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 4;
-    display: block;
+#shootBlocker {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  display: none; /* 🔴 IMPORTANT */
 }
+
 
 #shootBlocker:hover{
     cursor: not-allowed;
