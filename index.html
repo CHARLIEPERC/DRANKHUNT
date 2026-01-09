@@ -124,6 +124,30 @@
     <script src="JS/StartScreen.js?v=2" defer></script>
     <script src="JS/BootIntro.js"></script>
     <script src="JS/Application.js"></script>
+
+    <!-- Load BootIntro first so window.showBootIntro exists (non-fatal if missing) -->
+<script src="JS/BootIntro.js" defer onerror="console.warn('BootIntro.js failed to load (non-fatal)')"></script>
+
+<!-- Core game scripts in dependency order -->
+<script src="JS/Scale.js" defer></script>
+<script src="JS/PointsHandler.js?v=2" defer></script>
+<script src="JS/DucksHandler.js?v=2" defer></script>
+<script src="JS/Duck.js?v=2" defer></script>
+<script src="JS/View.js?v=2" defer></script>
+<script src="JS/ShotHandler.js?v=2" defer></script>
+
+<!-- Dog must be before Game (groundBaselinePx comes from here in your codebase) -->
+<script src="JS/Dog.js?v=2" defer></script>
+
+<!-- Game depends on Dog -->
+<script src="JS/Game.js?v=2" defer></script>
+
+<!-- StartScreen must be before Application -->
+<script src="JS/StartScreen.js?v=2" defer></script>
+
+<!-- Application defines launchApplication() used by onclick -->
+<script src="JS/Application.js?v=2" defer></script>
+
 </body>
 </html>
 <script src="JS/Dog.js?v=2" defer></script>
