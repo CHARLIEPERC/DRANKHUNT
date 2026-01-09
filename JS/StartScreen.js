@@ -3,7 +3,6 @@ class StartScreen {
   constructor() {
     this.availableModes = [];
     this.currentModeIndex = 0;
-
     this.menuMusic = new Audio("/DRANKHUNT/resources/sounds/menu.mp3");
     this.menuMusic.loop = true;
     this.menuMusic.volume = 0.3;
@@ -12,10 +11,7 @@ class StartScreen {
     this.initializeButtons();
     this.displaySettingsForCurrentMode();
 
-    // Try to play menu music (safe if blocked)
-    try {
-      this.playMenuMusic();
-    } catch (e) {}
+    try { this.playMenuMusic(); } catch(e) {}
   }
 
   initializeModes() {
@@ -27,8 +23,8 @@ class StartScreen {
   }
 
   initializeButtons() {
-    $("#prevMode").off("click").on("click", () => this.changeMode("prev"));
-    $("#nextMode").off("click").on("click", () => this.changeMode("next"));
+    $("#prevMode").click(() => this.changeMode("prev"));
+    $("#nextMode").click(() => this.changeMode("next"));
   }
 
   changeMode(toggle) {
@@ -47,18 +43,21 @@ class StartScreen {
   }
 
   getGameParametersFromUserSelect() {
-    const selectedMode = this.availableModes[this.currentModeIndex];
+    const m = this.availableModes[this.currentModeIndex];
     return {
-      modeName: selectedMode.name,
-      ducksNumber: selectedMode.ducks,
-      movesNumber: selectedMode.moves,
-      initialAmmo: selectedMode.ammunition
+      modeName: m.name,
+      ducksNumber: m.ducks,
+      movesNumber: m.moves,
+      initialAmmo: m.ammunition
     };
   }
 
-  // 🔑 SAFE FIX: never crash if element is missing
   hideStartScreen() {
-    const el = document.querySelector(".startScreen");
+    // Try all known start screen containers
+    const el =
+      document.querySelector(".startScreen") ||
+      document.querySelector(".startScreen__content") ||
+      document.getElementById("startScreen");
 
     if (!el) {
       console.warn("Start screen element not found, skipping hide.");
