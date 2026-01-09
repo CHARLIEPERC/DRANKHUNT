@@ -11,6 +11,13 @@
 }
 
 html, body {
+  background: #000 !important;
+}
+#gameWrap {
+  background: #000 !important;
+}
+
+html, body {
   height: 100%;
   margin: 0;
   overflow: hidden; /* prevent page scrolling on iOS */
