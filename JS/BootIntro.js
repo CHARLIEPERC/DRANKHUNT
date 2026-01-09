@@ -1,17 +1,3 @@
-function playBootAudioOnce(src) {
-  if (!src) return;
-  if (window.__BOOT_AUDIO_PLAYED__) return;
-  window.__BOOT_AUDIO_PLAYED__ = true;
-
-  try {
-    const a = new Audio(src);
-    a.preload = "auto";
-    a.volume = 1.0;
-    a.play().catch(() => {});
-  } catch (e) {}
-}
-
-
 // JS/BootIntro.js
 (function () {
   function el(tag, attrs = {}, parent) {
@@ -25,16 +11,20 @@ function playBootAudioOnce(src) {
     return node;
   }
 
-  function playBootAudio(src) {
+  // Plays the boot audio only once per page load/session.
+  // IMPORTANT: must be called from a user gesture (pointerdown/click) or browsers will block it.
+  function playBootAudioOnce(src) {
+    if (!src) return;
+    if (window.__BOOT_AUDIO_PLAYED__) return;
+    window.__BOOT_AUDIO_PLAYED__ = true;
+
     try {
       const a = new Audio(src);
-      a.volume = 0.9;
+      a.preload = "auto";
+      a.volume = 1.0;
       a.currentTime = 0;
       a.play().catch(() => {});
-      return a;
-    } catch (_) {
-      return null;
-    }
+    } catch (e) {}
   }
 
   function showBootIntro({ logoSrc, audioSrc, onDone }) {
@@ -42,6 +32,7 @@ function playBootAudioOnce(src) {
     const existing = document.getElementById("gb-boot");
     if (existing) existing.remove();
 
+    // Overlay
     const overlay = el("div", { id: "gb-boot" }, document.body);
     overlay.style.position = "fixed";
     overlay.style.inset = "0";
@@ -53,6 +44,15 @@ function playBootAudioOnce(src) {
     overlay.style.imageRendering = "pixelated";
     overlay.style.userSelect = "none";
     overlay.style.touchAction = "manipulation";
+
+    // ✅ AUDIO: one-time user gesture unlock on the intro overlay
+    overlay.addEventListener(
+      "pointerdown",
+      () => {
+        playBootAudioOnce(audioSrc);
+      },
+      { once: true }
+    );
 
     // Logo container
     const logoWrap = el("div", {}, overlay);
@@ -68,7 +68,7 @@ function playBootAudioOnce(src) {
     img.style.opacity = "1";
     img.style.filter = "grayscale(100%)";
 
-    // Sweep
+    // Sweep overlay
     const sweep = el("div", {}, logoWrap);
     sweep.style.position = "absolute";
     sweep.style.inset = "0";
@@ -86,13 +86,6 @@ function playBootAudioOnce(src) {
     sweep.style.maskRepeat = "no-repeat";
     sweep.style.maskPosition = "center";
     sweep.style.maskSize = "contain";
-
-    let audioStarted = false;
-overlay.addEventListener("pointerdown", () => {
-  if (audioStarted) return;
-  audioStarted = true;
-  if (audioSrc) playBootAudio(audioSrc);
-}, { once: true });
 
     // Duration tuning
     let step = 0;
@@ -129,20 +122,20 @@ overlay.addEventListener("pointerdown", () => {
     }, tickMs);
   }
 
+  // expose globally
   window.showBootIntro = showBootIntro;
 
+  // Auto-run boot intro before showing the start screen
   window.addEventListener("DOMContentLoaded", () => {
-  const ss = document.getElementById("startScreen");
-  if (ss) ss.classList.add("is-hidden");
+    const ss = document.getElementById("startScreen");
+    if (ss) ss.classList.add("is-hidden");
 
-  // show Slumpedboy boot first
-  window.showBootIntro({
-    logoSrc: "resources/sprites/slumpedboy-logo.png",
-    audioSrc: "resources/sounds/boot.mp3",
-    onDone: () => {
-      if (ss) ss.classList.remove("is-hidden");
-    }
+    window.showBootIntro({
+      logoSrc: "resources/sprites/slumpedboy-logo.png",
+      audioSrc: "resources/sounds/boot.mp3",
+      onDone: () => {
+        if (ss) ss.classList.remove("is-hidden");
+      }
+    });
   });
-});
-
 })();
