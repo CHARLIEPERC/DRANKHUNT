@@ -1,11 +1,33 @@
-var startScreen = new StartScreen();
+// JS/Application.js
+
+var startScreen = null;
 
 function launchApplication() {
-  // Play menu music on start screen (existing behavior)
-  startScreen.playMenuMusic();
+  // Create StartScreen only when we actually start (avoids "StartScreen is not defined")
+  if (!startScreen) {
+    if (typeof StartScreen !== "function") {
+      console.error("StartScreen is not loaded. Check index.html script order.");
+      return;
+    }
+    startScreen = new StartScreen();
+  }
 
-  let gameParameters = startScreen.getGameParametersFromUserSelect();
-  let selectedModeName = gameParameters.modeName;
+  // Menu music behavior (guarded)
+  if (typeof startScreen.playMenuMusic === "function") {
+    startScreen.playMenuMusic();
+  }
+
+  const gameParameters =
+    typeof startScreen.getGameParametersFromUserSelect === "function"
+      ? startScreen.getGameParametersFromUserSelect()
+      : null;
+
+  if (!gameParameters || !gameParameters.modeName) {
+    console.error("Could not read game parameters from StartScreen.");
+    return;
+  }
+
+  const selectedModeName = gameParameters.modeName;
   let selectedMode;
 
   if (selectedModeName === "EXTREME") {
@@ -16,14 +38,24 @@ function launchApplication() {
     selectedMode = new ClassicGame(gameParameters);
   }
 
-  startScreen.hideStartScreen();
+  if (typeof startScreen.hideStartScreen === "function") {
+    startScreen.hideStartScreen();
+  }
 
-  // Stop menu music once gameplay is about to begin
-  startScreen.stopMenuMusic();
+  // Stop menu music when gameplay begins
+  if (typeof startScreen.stopMenuMusic === "function") {
+    startScreen.stopMenuMusic();
+  }
 
-  // Show boot intro, then start game
-  window.showBootIntro({
-    logoSrc: "resources/sprites/slumpedboy-logo.png",
-    onDone: () => selectedMode.startGame()
-  });
+  const startGameplay = () => selectedMode.startGame();
+
+  // If BootIntro exists, show it, otherwise start immediately.
+  if (window.showBootIntro && typeof window.showBootIntro === "function") {
+    window.showBootIntro({
+      logoSrc: "resources/sprites/slumpedboy-logo.png",
+      onDone: startGameplay
+    });
+  } else {
+    startGameplay();
+  }
 }
