@@ -51,6 +51,18 @@
     o.onended = () => ctx.close().catch(() => {});
   }
 
+  function playBootAudio(src) {
+  try {
+    const a = new Audio(src);
+    a.volume = 0.9;
+    a.currentTime = 0;
+    a.play().catch(() => {});
+    return a;
+  } catch (e) {
+    return null;
+  }
+}
+
   function showBootIntro({ logoSrc, onDone }) {
     // If already shown, just continue.
     if (window.__BOOT_INTRO_DONE__) {
@@ -73,16 +85,20 @@
     overlay.style.touchAction = "manipulation";
 
     // Play chime on first user interaction only (browser-safe).
-    let chimePlayed = false;
-    overlay.addEventListener(
-      "pointerdown",
-      () => {
-        if (chimePlayed) return;
-        chimePlayed = true;
-        playTwoNoteChime();
-      },
-      { once: true }
-    );
+let audioStarted = false;
+overlay.addEventListener(
+  "pointerdown",
+  () => {
+    if (audioStarted) return;
+    audioStarted = true;
+
+    // Play your boot sound (MP3/WAV) + optional chime
+    playBootAudio("resources/sounds/boot.mp3");
+    // playTwoNoteChime(); // keep this if you want both
+  },
+  { once: true }
+);
+
 
     // Flicker layer (very subtle, optional)
     const flicker = el("div", {}, overlay);
