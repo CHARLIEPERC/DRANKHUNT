@@ -3,7 +3,6 @@
 var startScreen = new StartScreen();
 
 window.launchApplication = function () {
-  // Read selected mode
   const gameParameters = startScreen.getGameParametersFromUserSelect();
   const mode = gameParameters.modeName;
 
@@ -16,10 +15,8 @@ window.launchApplication = function () {
     game = new ClassicGame(gameParameters);
   }
 
-  // Hide menu + stop menu music
   startScreen.hideStartScreen();
   startScreen.stopMenuMusic();
 
-  // Start gameplay
   game.startGame();
 };
