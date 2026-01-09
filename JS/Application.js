@@ -1,16 +1,14 @@
-// JS/Application.js
-
 var startScreen = null;
 
 function launchApplication() {
-  // Create StartScreen only when we actually start (avoids "StartScreen is not defined")
-if (!startScreen) {
-  if (typeof StartScreen !== "function") {
-    console.error("StartScreen is not loaded. Check index.html script order.");
-    return;
+  // Create StartScreen only when we actually start
+  if (!startScreen) {
+    if (typeof StartScreen !== "function") {
+      console.error("StartScreen is not loaded. Check index.html script order.");
+      return;
+    }
+    startScreen = new StartScreen();
   }
-  startScreen = new StartScreen();
-}
 
   // Menu music behavior (guarded)
   if (typeof startScreen.playMenuMusic === "function") {
@@ -49,7 +47,7 @@ if (!startScreen) {
 
   const startGameplay = () => selectedMode.startGame();
 
-  // If BootIntro exists, show it, otherwise start immediately.
+  // Run Slumpedboy boot intro AFTER Start click (audio-safe)
   if (window.showBootIntro && typeof window.showBootIntro === "function") {
     window.showBootIntro({
       logoSrc: "resources/sprites/slumpedboy-logo.png",
