@@ -1,82 +1,67 @@
 /* =========================
-   START SCREEN (clean rewrite)
-   Uses: <div id="startScreen" class="startScreen">
+   START SCREEN — FINAL CLEAN
    ========================= */
 
-/* Hidden until boot intro finishes (and when game starts) */
-#startScreen.is-hidden,
-.startScreen.is-hidden {
+/* Hide when needed */
+#startScreen.is-hidden {
   display: none !important;
 }
 
-/* Full overlay on top of everything */
-#startScreen,
-.startScreen {
+/* Full-screen overlay */
+#startScreen {
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 10000;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background-image: url("/DRANKHUNT/resources/sprites/background/startBackground.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  text-align: center;
+  background: url("/DRANKHUNT/resources/sprites/background/startBackground.jpg")
+              center / cover no-repeat;
 }
 
-/* Dark tint so text/logo pops */
-#startScreen::before,
-.startScreen::before {
+/* Dark overlay for readability */
+#startScreen::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.6);
 }
 
-/* Content sits above tint */
+/* Content container */
 .startScreen__content {
   position: relative;
   z-index: 1;
 
   width: 100%;
   max-width: 390px;
-  padding: 16px;
+  padding: 20px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
+
+  text-align: center;
 }
 
-/* Optional: logo image if you add one */
+/* DRANKHUNT logo */
 .startScreen__logo {
   width: 260px;
-  max-width: 80vw;
+  max-width: 80%;
   height: auto;
   image-rendering: pixelated;
+  pointer-events: none;
 }
 
-/* Clickable boxes */
-.startScreen__content__box {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* START text */
+/* Start button */
 #startButton {
-  width: 100%;
-  margin: 0;
-  font-size: 34px;
-  letter-spacing: 1px;
+  font-size: 36px;
   color: red;
-  transition: 0.25s ease;
+  letter-spacing: 1px;
   user-select: none;
+  transition: 0.25s ease;
 }
 
 #startButton:hover {
@@ -85,27 +70,26 @@
   cursor: pointer;
 }
 
-/* Mode selector row */
+/* Mode selector */
 #modeSelect {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  width: 100%;
+  gap: 18px;
 }
 
 .selection {
-  color: yellow;
   font-size: 26px;
-  user-select: none;
+  color: yellow;
   min-width: 140px;
+  user-select: none;
 }
 
 .arrow {
-  color: rgb(0, 0, 255);
   font-size: 38px;
-  user-select: none;
+  color: blue;
   transition: 0.2s ease;
+  user-select: none;
 }
 
 .arrow:hover {
@@ -115,12 +99,10 @@
 
 /* Footer */
 #startScreenFooter {
-  position: fixed;
-  bottom: 10px;
-  left: 0;
+  position: absolute;
+  bottom: 12px;
   width: 100%;
-  color: rgba(255,255,255,0.55);
   font-size: 12px;
+  color: rgba(255,255,255,0.55);
   text-align: center;
-  z-index: 100000;
 }
