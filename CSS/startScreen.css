@@ -1,5 +1,5 @@
 /* =========================
-   START SCREEN — FINAL CLEAN
+   START SCREEN — FINAL (BLACK + BIG LOGO)
    ========================= */
 
 /* Hide when needed */
@@ -17,16 +17,7 @@
   align-items: center;
   justify-content: center;
 
-  background: url("/DRANKHUNT/resources/sprites/background/startBackground.jpg")
-              center / cover no-repeat;
-}
-
-/* Dark overlay for readability */
-#startScreen::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: #000; /* PURE BLACK */
 }
 
 /* Content container */
@@ -36,36 +27,38 @@
 
   width: 100%;
   max-width: 390px;
-  padding: 20px;
+  padding: 24px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 22px;
 
   text-align: center;
 }
 
-/* DRANKHUNT logo */
+/* DRANKHUNT logo — BIGGER */
 .startScreen__logo {
-  width: 260px;
-  max-width: 80%;
+  width: 340px;        /* BIG */
+  max-width: 92vw;     /* Safe on mobile */
   height: auto;
+  margin-bottom: 18px;
+
   image-rendering: pixelated;
   pointer-events: none;
 }
 
 /* Start button */
 #startButton {
-  font-size: 36px;
+  font-size: 40px;
   color: red;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   user-select: none;
   transition: 0.25s ease;
 }
 
 #startButton:hover {
-  letter-spacing: 6px;
+  letter-spacing: 8px;
   color: rgb(0, 215, 253);
   cursor: pointer;
 }
@@ -75,18 +68,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 20px;
 }
 
 .selection {
-  font-size: 26px;
+  font-size: 28px;
   color: yellow;
-  min-width: 140px;
+  min-width: 150px;
   user-select: none;
 }
 
 .arrow {
-  font-size: 38px;
+  font-size: 40px;
   color: blue;
   transition: 0.2s ease;
   user-select: none;
@@ -100,9 +93,9 @@
 /* Footer */
 #startScreenFooter {
   position: absolute;
-  bottom: 12px;
+  bottom: 14px;
   width: 100%;
   font-size: 12px;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.6);
   text-align: center;
 }
