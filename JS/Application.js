@@ -4,12 +4,13 @@ var startScreen = null;
 
 function launchApplication() {
   // Create StartScreen only when we actually start (avoids "StartScreen is not defined")
-  if (!startScreen) {
-    if (typeof StartScreen !== "function") {
-      console.error("StartScreen is not loaded. Check index.html script order.");
-      return;
-    }
+if (!startScreen) {
+  if (typeof StartScreen !== "function") {
+    console.error("StartScreen is not loaded. Check index.html script order.");
+    return;
   }
+  startScreen = new StartScreen();
+}
 
   // Menu music behavior (guarded)
   if (typeof startScreen.playMenuMusic === "function") {
