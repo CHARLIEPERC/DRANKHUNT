@@ -1,3 +1,7 @@
+// --- Required globals for Game.js ---
+window.duckLevPx = window.duckLevPx ?? Math.round(window.innerHeight * 0.32);
+window.groundBaselinePx = window.groundBaselinePx ?? window.duckLevPx;
+
 // Fallback for Game.js: ensure groundBaselinePx exists
 window.groundBaselinePx = window.groundBaselinePx ?? (function () {
   const bushes = document.querySelector(".bushes");
