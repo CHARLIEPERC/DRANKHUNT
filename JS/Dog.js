@@ -1,3 +1,14 @@
+// Fallback for Game.js: ensure groundBaselinePx exists
+window.groundBaselinePx = window.groundBaselinePx ?? (function () {
+  const bushes = document.querySelector(".bushes");
+  if (bushes) {
+    const h = Math.round(bushes.getBoundingClientRect().height);
+    if (h > 0) return h;
+  }
+  // fallback: 30% of screen height
+  return Math.round(window.innerHeight * 0.30);
+})();
+
 class Dog{
 
     constructor(id){
