@@ -15,13 +15,12 @@
   }
 
   function playTwoNoteChime() {
-    // Original simple chime (square wave), user-gesture safe.
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
 
     const ctx = new AudioCtx();
-
     const now = ctx.currentTime;
+
     const master = ctx.createGain();
     master.gain.value = 0.06;
     master.connect(ctx.destination);
@@ -35,7 +34,6 @@
 
     o.connect(g);
 
-    // Two short notes (not the Nintendo boot sound).
     const f1 = 659.25; // E5
     const f2 = 987.77; // B5
 
@@ -50,7 +48,6 @@
     o.start(now);
     o.stop(now + 0.35);
 
-    // Close context to avoid keeping audio hardware active.
     o.onended = () => ctx.close().catch(() => {});
   }
 
@@ -75,7 +72,19 @@
     overlay.style.userSelect = "none";
     overlay.style.touchAction = "manipulation";
 
-    // Flicker layer
+    // Play chime on first user interaction only (browser-safe).
+    let chimePlayed = false;
+    overlay.addEventListener(
+      "pointerdown",
+      () => {
+        if (chimePlayed) return;
+        chimePlayed = true;
+        playTwoNoteChime();
+      },
+      { once: true }
+    );
+
+    // Flicker layer (very subtle, optional)
     const flicker = el("div", {}, overlay);
     flicker.style.position = "absolute";
     flicker.style.inset = "0";
@@ -93,17 +102,14 @@
     img.style.maxWidth = "70vw";
     img.style.height = "auto";
     img.style.imageRendering = "pixelated";
-    img.style.opacity = "1";       // logo visible immediately
-    img.style.filter = "grayscale(100%)"; // start monochrome like original
+    img.style.opacity = "1"; // visible immediately
+    img.style.filter = "grayscale(100%)"; // start monochrome
 
-
-    // Color sweep overlay (stepped bands)
+    // Color sweep overlay
     const sweep = el("div", {}, logoWrap);
     sweep.style.position = "absolute";
     sweep.style.inset = "0";
     sweep.style.pointerEvents = "none";
-    sweep.style.mixBlendMode = "multiply";
-    sweep.style.opacity = "0";
 
     // Mask sweep to logo pixels (color only appears on the letters)
     sweep.style.webkitMaskImage = `url(${logoSrc})`;
@@ -115,105 +121,68 @@
     sweep.style.maskPosition = "center";
     sweep.style.maskSize = "contain";
 
-// Make colors bright
-sweep.style.opacity = "1";
-sweep.style.filter = "saturate(2.2) contrast(1.15)";
-sweep.style.mixBlendMode = "screen";
+    // Bright color pass
+    sweep.style.opacity = "1";
+    sweep.style.filter = "saturate(2.4) contrast(1.2)";
+    sweep.style.mixBlendMode = "screen";
 
+    // Run animation immediately (no click required)
+    let step = 0;
+    const steps = 42;     // more steps = slower
+    const tickMs = 38;    // slower speed
 
+    const interval = setInterval(() => {
+      step++;
 
-    // Start on first user gesture
-    overlay.addEventListener(
-      "pointerdown",
-      () => {
-        // Chime
-        playTwoNoteChime();
+      // subtle flicker (you can reduce more or remove)
+      flicker.style.opacity = (Math.random() * 0.02).toFixed(3);
 
-        // Run animation
-        let step = 0;
-        const steps = 18;
+      const pct = Math.min(100, Math.round((step / steps) * 100));
 
-        // enable sweep
-        sweep.style.opacity = "1";
+      // Bright rainbow highlight passing through text only
+      sweep.style.background = `linear-gradient(
+        to right,
+        rgba(255,0,0,0) 0%,
+        rgba(255,0,0,1) 18%,
+        rgba(255,165,0,1) 32%,
+        rgba(255,255,0,1) 46%,
+        rgba(0,255,0,1) 60%,
+        rgba(0,120,255,1) 74%,
+        rgba(180,0,255,1) 88%,
+        rgba(180,0,255,0) 100%
+      )`;
 
-        const interval = setInterval(() => {
-          step++;
-          
+      sweep.style.backgroundSize = "320% 100%";
+      sweep.style.backgroundPosition = `${100 - pct}% 0%`;
 
-          // flicker
-          flicker.style.opacity = (Math.random() * 0.06).toFixed(3);
+      if (step >= steps) {
+        clearInterval(interval);
 
-          // brighten logo slightly over time
-          img.style.opacity = (0.15 + step * 0.04).toFixed(2);
+        flicker.style.opacity = "0";
+        sweep.style.opacity = "0";
+        img.style.filter = "none"; // solid logo at end
 
-          // stepped vertical band position
-          const pct = Math.min(100, Math.round((step / steps) * 100));
-
-          // A moving rainbow highlight that travels through the text
-sweep.style.background = `linear-gradient(
-  to right,
-  rgba(255,0,0,0) 0%,
-  rgba(255,0,0,0.85) 20%,
-  rgba(255,165,0,0.85) 32%,
-  rgba(255,255,0,0.85) 44%,
-  rgba(0,200,0,0.85) 56%,
-  rgba(0,120,255,0.85) 68%,
-  rgba(180,0,255,0.85) 80%,
-  rgba(180,0,255,0) 100%
-)`;
-
-sweep.style.backgroundSize = "300% 100%";
-sweep.style.backgroundPosition = `${100 - pct}% 0%`;
-
-
-          if (step >= steps) {
-            clearInterval(interval);
-
-            // lock-in: stop jitter/flicker, dim sweep
-            logoWrap.style.transform = "translate(0px, 0px)";
-            flicker.style.opacity = "0";
-            sweep.style.opacity = "0";
-            img.style.opacity = "1";
-            img.style.filter = "none"; // return to solid logo
-
-
-            // brief pause then remove
-            setTimeout(() => {
-              overlay.remove();
-              onDone && onDone();
-            }, 140);
-          }
-        }, 28);
-      },
-      { once: true }
-    );
-
-    // Hint text (optional, tiny)
-    const hint = el("div", {}, overlay);
-    hint.textContent = "Tap to start";
-    hint.style.position = "absolute";
-    hint.style.bottom = "18px";
-    hint.style.fontFamily = "monospace";
-    hint.style.fontSize = "12px";
-    hint.style.opacity = "0.55";
-    hint.style.color = "#0f380f";
+        setTimeout(() => {
+          overlay.remove();
+          onDone && onDone();
+        }, 140);
+      }
+    }, tickMs);
   }
 
   // expose globally
   window.showBootIntro = showBootIntro;
 
   // Auto-run boot intro before showing the start screen
-window.addEventListener("DOMContentLoaded", () => {
-  const ss = document.getElementById("startScreen");
-  if (ss) ss.classList.add("is-hidden");
+  window.addEventListener("DOMContentLoaded", () => {
+    const ss = document.getElementById("startScreen");
+    if (ss) ss.classList.add("is-hidden");
 
-  // Run boot immediately on page load
-  window.showBootIntro({
-    logoSrc: "resources/sprites/slumpedboy-logo.png",
-    onDone: () => {
-      if (ss) ss.classList.remove("is-hidden");
-    }
+    window.showBootIntro({
+      logoSrc: "resources/sprites/slumpedboy-logo.png",
+      onDone: () => {
+        if (ss) ss.classList.remove("is-hidden");
+      }
+    });
   });
-});
-
 })();
