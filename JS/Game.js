@@ -218,7 +218,7 @@ class ClassicGame extends Game{
     }
 }
 // Set duck bottom so it's duckElevPx above the top of the grass
-const bottomPx = groundBaselinePx + duckElevPx;
+const bottomPx = groundBaselinePx + (window.duckElevPx ?? 0);
 $(this.duckId).css('bottom', bottomPx + 'px');
 
 // Place duck off-screen horizontally so it flies into view.
