@@ -33,35 +33,34 @@
   <!-- Game wrapper: fixed design size, scaled to fit viewport via JS -->
   <div id="gameWrap">
 
-<!-- Start screen -->
-<div class="startScreen" id="startScreen">
-  <div class="startScreen__content">
+    <!-- Start screen (HIDDEN until BootIntro finishes) -->
+    <div id="startScreen" class="startScreen is-hidden">
+      <div class="startScreen__content">
 
-    <!-- DRANKHUNT logo -->
-    <img
-      id="drankHuntLogo"
-      class="startScreen__logo"
-      src="resources/sprites/ui/drankhunt-logo.png"
-      alt="DRANKHUNT"
-      draggable="false"
-    />
+        <!-- DRANKHUNT logo -->
+        <img
+          id="drankHuntLogo"
+          class="startScreen__logo"
+          src="resources/sprites/ui/drankhunt-logo.png"
+          alt="DRANKHUNT"
+          draggable="false"
+        />
 
-    <!-- Start button -->
-    <div class="startScreen__content__box startScreen__startBtn" onclick="launchApplication()">
-      <span class="startScreen__startText">START</span>
+        <!-- Start button -->
+        <div class="startScreen__content__box startScreen__startBtn" onclick="launchApplication()">
+          <h2 id="startButton">START</h2>
+        </div>
+
+        <!-- Mode select -->
+        <div class="startScreen__content__box" id="modeSelect">
+          <div class="arrow" id="prevMode">⏴</div>
+          <div class="selection">CLASSIC</div>
+          <div class="arrow" id="nextMode">⏵</div>
+        </div>
+
+        <div id="startScreenFooter">Tap START to play</div>
+      </div>
     </div>
-
-    <!-- Mode select -->
-    <div class="startScreen__content__box" id="modeSelect">
-      <div class="arrow" id="prevMode">⏴</div>
-      <div class="selection">CLASSIC</div>
-      <div class="arrow" id="nextMode">⏵</div>
-    </div>
-
-  </div>
-</div>
-
-
 
     <div id="sky" class="sky">
       <div class="comboMessage"></div>
@@ -108,7 +107,8 @@
       <h3 id="levelBoxP">LEVEL</h3>
     </div>
 
-    <div id="shootBlocker"></div>
+    <!-- IMPORTANT: start hidden so it doesn't block the Start Screen -->
+    <div id="shootBlocker" style="display:none;"></div>
 
     <div id="overlay">
       <div class="resultsBox">
@@ -134,7 +134,7 @@
 
   </div>
 
-    <!-- Scripts: include each file ONCE, in dependency order -->
+  <!-- Scripts: include each file ONCE, in dependency order -->
   <script src="JS/Scale.js" defer></script>
   <script src="JS/PointsHandler.js?v=2" defer></script>
   <script src="JS/DucksHandler.js?v=2" defer></script>
