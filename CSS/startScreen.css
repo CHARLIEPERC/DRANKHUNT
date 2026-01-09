@@ -1,33 +1,25 @@
 /* =========================
-   START SCREEN (single source of truth)
-   Works with: <div id="startScreen" class="startScreen">
+   START SCREEN (clean rewrite)
+   Uses: <div id="startScreen" class="startScreen">
    ========================= */
 
-/* Hidden until boot intro finishes */
+/* Hidden until boot intro finishes (and when game starts) */
 #startScreen.is-hidden,
 .startScreen.is-hidden {
   display: none !important;
 }
 
-/* Make sure game wrapper can host absolute children if needed */
-#gameWrap {
-  position: relative;
-}
-
-/* Full-screen overlay on top of the game */
+/* Full overlay on top of everything */
 #startScreen,
 .startScreen {
   position: fixed;
-  inset: 0;                 /* top:0; right:0; bottom:0; left:0 */
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   z-index: 99999;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* Your background image */
   background-image: url("/DRANKHUNT/resources/sprites/background/startBackground.jpg");
   background-size: cover;
   background-position: center;
@@ -36,35 +28,54 @@
   text-align: center;
 }
 
-/* Center the start UI */
+/* Dark tint so text/logo pops */
+#startScreen::before,
+.startScreen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+/* Content sits above tint */
 .startScreen__content {
+  position: relative;
+  z-index: 1;
+
   width: 100%;
-  max-width: 390px;         /* match game width */
+  max-width: 390px;
   padding: 16px;
-  text-align: center;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
-/* Boxes */
+/* Optional: logo image if you add one */
+.startScreen__logo {
+  width: 260px;
+  max-width: 80vw;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+/* Clickable boxes */
 .startScreen__content__box {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  font-size: large;
-  color: white;
 }
 
 /* START text */
 #startButton {
   width: 100%;
-  font-size: x-large;
-  transition: 0.35s ease;
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: 1px;
   color: red;
+  transition: 0.25s ease;
   user-select: none;
 }
 
@@ -79,22 +90,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 14px;
   width: 100%;
 }
 
 .selection {
-  width: auto;
-  min-width: 120px;
   color: yellow;
+  font-size: 26px;
   user-select: none;
+  min-width: 140px;
 }
 
 .arrow {
   color: rgb(0, 0, 255);
-  font-size: 35px;
-  transition: 0.25s ease-in-out;
+  font-size: 38px;
   user-select: none;
+  transition: 0.2s ease;
 }
 
 .arrow:hover {
@@ -104,14 +115,12 @@
 
 /* Footer */
 #startScreenFooter {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
+  left: 0;
   width: 100%;
-  color: gray;
-}
-
-/* Optional helper */
-.cursorChange:hover {
-  cursor: pointer;
-  color: green;
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
+  text-align: center;
+  z-index: 100000;
 }
