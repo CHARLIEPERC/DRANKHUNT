@@ -144,8 +144,8 @@ overlay.addEventListener(
 
     // Run animation immediately (no click required)
     let step = 0;
-    const steps = 160;     // more steps = slower
-    const tickMs = 45;    // slower speed
+    const steps = 150;     // more steps = slower
+    const tickMs = 40;    // slower speed
 
     const interval = setInterval(() => {
       step++;
