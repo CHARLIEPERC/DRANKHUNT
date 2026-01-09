@@ -19,6 +19,6 @@ startScreen.hideStartScreen();
 startScreen.stopMenuMusic();
 
 window.showBootIntro({
-  logoSrc: "resources/images/slumpedboy-logo.png", // <-- change to your real path
+  logoSrc: "resources/sprites/slumpedboy-logo.png",
   onDone: () => selectedMode.startGame()
 });
