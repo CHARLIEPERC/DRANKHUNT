@@ -105,6 +105,17 @@
     sweep.style.mixBlendMode = "multiply";
     sweep.style.opacity = "0";
 
+    // Mask the sweep to the logo pixels so color only appears on the text
+sweep.style.webkitMaskImage = `url(${logoSrc})`;
+sweep.style.webkitMaskRepeat = "no-repeat";
+sweep.style.webkitMaskPosition = "center";
+sweep.style.webkitMaskSize = "contain";
+sweep.style.maskImage = `url(${logoSrc})`;
+sweep.style.maskRepeat = "no-repeat";
+sweep.style.maskPosition = "center";
+sweep.style.maskSize = "contain";
+
+
     // Start on first user gesture
     overlay.addEventListener(
       "pointerdown",
@@ -121,11 +132,7 @@
 
         const interval = setInterval(() => {
           step++;
-
-          // jitter
-          const jx = (Math.random() * 2 - 1) | 0;
-          const jy = (Math.random() * 2 - 1) | 0;
-          logoWrap.style.transform = `translate(${jx}px, ${jy}px)`;
+          
 
           // flicker
           flicker.style.opacity = (Math.random() * 0.06).toFixed(3);
@@ -136,16 +143,21 @@
           // stepped vertical band position
           const pct = Math.min(100, Math.round((step / steps) * 100));
 
-          // 3-band palette inspired by handheld boot vibes (not exact)
-          sweep.style.background = `linear-gradient(
-  to bottom,
-  rgba(255, 0, 0, 0.75) ${Math.max(0, pct - 25)}%,
-  rgba(255, 165, 0, 0.75) ${Math.max(0, pct - 15)}%,
-  rgba(255, 255, 0, 0.75) ${Math.max(0, pct - 5)}%,
-  rgba(0, 200, 0, 0.75) ${Math.max(0, pct + 5)}%,
-  rgba(0, 120, 255, 0.75) ${Math.max(0, pct + 15)}%,
-  rgba(180, 0, 255, 0.75) ${Math.max(0, pct + 25)}%
+          // A moving rainbow highlight that travels through the text
+sweep.style.background = `linear-gradient(
+  to right,
+  rgba(255,0,0,0) 0%,
+  rgba(255,0,0,0.85) 20%,
+  rgba(255,165,0,0.85) 32%,
+  rgba(255,255,0,0.85) 44%,
+  rgba(0,200,0,0.85) 56%,
+  rgba(0,120,255,0.85) 68%,
+  rgba(180,0,255,0.85) 80%,
+  rgba(180,0,255,0) 100%
 )`;
+
+sweep.style.backgroundSize = "300% 100%";
+sweep.style.backgroundPosition = `${100 - pct}% 0%`;
 
 
           if (step >= steps) {
