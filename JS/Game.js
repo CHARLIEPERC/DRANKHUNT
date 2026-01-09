@@ -1,3 +1,6 @@
+// Minimal safe helper for possibly-missing global
+const getDuckElevPx = () => (window.duckElevPx ?? 0);
+
 class Game{
 
     constructor(gameParameters){
@@ -217,8 +220,9 @@ class ClassicGame extends Game{
         $("#sky").click(this.shoot.bind(this));
     }
 }
+
 // Set duck bottom so it's duckElevPx above the top of the grass
-const bottomPx = groundBaselinePx + (window.duckElevPx ?? 0);
+const bottomPx = groundBaselinePx + getDuckElevPx();
 $(this.duckId).css('bottom', bottomPx + 'px');
 
 // Place duck off-screen horizontally so it flies into view.
