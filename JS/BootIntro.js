@@ -73,8 +73,12 @@
     sweep.style.maskPosition = "center";
     sweep.style.maskSize = "contain";
 
-    // Audio will start only if this is called from a user gesture (Start click)
-    if (audioSrc) playBootAudio(audioSrc);
+    let audioStarted = false;
+overlay.addEventListener("pointerdown", () => {
+  if (audioStarted) return;
+  audioStarted = true;
+  if (audioSrc) playBootAudio(audioSrc);
+}, { once: true });
 
     // Duration tuning
     let step = 0;
