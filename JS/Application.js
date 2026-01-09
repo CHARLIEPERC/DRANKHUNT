@@ -1,51 +1,49 @@
 // JS/Application.js
 
-// Expose function for inline onclick="launchApplication()"
+// Make StartScreen instance once.
+var startScreen = new StartScreen();
+
+// Make it GLOBAL so inline onclick="launchApplication()" works.
 window.launchApplication = function () {
   try {
-    // StartScreen may exist as a global binding (not window.StartScreen)
-    const hasStartScreen = (typeof StartScreen !== "undefined");
+    // Read selected mode + params (still used for ammo/moves/etc)
+    const gameParameters = startScreen.getGameParametersFromUserSelect();
 
-    // Build / reuse startScreen instance
-    const ss = hasStartScreen
-      ? (window.__startScreenInstance || (window.__startScreenInstance = new StartScreen()))
-      : null;
+    // Pick a constructor that actually exists
+    const Ctor =
+      window.ClassicGame ||
+      window.ModernGame ||
+      window.ExtremeGame ||
+      window.Game;
 
-    // Pull params (or fall back to sane defaults)
-    const params = (ss && typeof ss.getGameParametersFromUserSelect === "function")
-      ? ss.getGameParametersFromUserSelect()
-      : {
-          modeName: "CLASSIC",
-          movesNumber: 10,
-          initialAmmo: 3,
-          ducksNumber: 2
-        };
+    if (!Ctor) {
+      throw new Error(
+        "No game constructor found. Expected window.Game or window.ClassicGame/ModernGame/ExtremeGame to exist."
+      );
+    }
 
-    const mode = (params && params.modeName) ? String(params.modeName).toUpperCase() : "CLASSIC";
+    const game = new Ctor(gameParameters);
 
-    // Pick constructor. These might exist as globals, not window.*
-    let Ctor = (typeof Game !== "undefined") ? Game : null;
-
-    if (mode === "EXTREME" && typeof ExtremeGame !== "undefined") Ctor = ExtremeGame;
-    if (mode === "MODERN" && typeof ModernGame !== "undefined") Ctor = ModernGame;
-    if (mode === "CLASSIC" && typeof ClassicGame !== "undefined") Ctor = ClassicGame;
-
-    if (!Ctor) throw new Error("Game constructor not found (Game/ClassicGame/ModernGame/ExtremeGame).");
-
-    const game = new Ctor(params);
-
-    // Hide start screen immediately (no dependency on StartScreen.js)
-    const startEl = document.getElementById("startScreen");
-    if (startEl) startEl.classList.add("is-hidden");
-
-    // Stop menu music if available
-    if (ss && typeof ss.stopMenuMusic === "function") ss.stopMenuMusic();
+    // Hide menu + stop menu music
+    startScreen.hideStartScreen();
+    if (typeof startScreen.stopMenuMusic === "function") {
+      startScreen.stopMenuMusic();
+    }
 
     // Start gameplay
-    if (typeof game.startGame !== "function") throw new Error("game.startGame() missing.");
     game.startGame();
   } catch (err) {
     console.error("launchApplication failed:", err);
-    alert("Start failed. Copy the first RED error line from Console and send it.");
+
+    // Helpful debug dump
+    console.log("Constructors:", {
+      Game: typeof window.Game,
+      ClassicGame: typeof window.ClassicGame,
+      ModernGame: typeof window.ModernGame,
+      ExtremeGame: typeof window.ExtremeGame,
+      StartScreen: typeof window.StartScreen,
+    });
+
+    alert("Start failed. Open DevTools Console and copy the red error text (and the line it points to).");
   }
 };
