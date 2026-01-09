@@ -72,3 +72,32 @@
     width: 100%;
     color: gray;
 }
+
+/* --- FIX: make start screen a full overlay that sits on top of the game --- */
+#gameWrap {
+  position: relative;
+}
+
+.startScreen {
+  position: absolute;
+  inset: 0;                 /* top:0; right:0; bottom:0; left:0 */
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.85);
+}
+
+.startScreen__content {
+  width: 100%;
+  max-width: 390px;         /* match your game width */
+  padding: 16px;
+  text-align: center;
+}
+
+/* keep the start UI from stretching weird */
+.startScreen__content__box {
+  width: 100%;
+}
