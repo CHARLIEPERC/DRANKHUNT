@@ -140,19 +140,23 @@
 
   </div>
 
-  <!-- Scripts: include each file once, dependency order -->
-  <script src="JS/Scale.js" defer></script>
-  <script src="JS/PointsHandler.js?v=2" defer></script>
-  <script src="JS/DucksHandler.js?v=2" defer></script>
-  <script src="JS/Duck.js?v=2" defer></script>
-  <script src="JS/View.js?v=2" defer></script>
-  <script src="JS/ShotHandler.js?v=2" defer></script>
-  <script src="JS/Dog.js?v=2" defer></script>
-  <script src="JS/Game.js?v=2" defer></script>
-  <script src="JS/StartScreen.js?v=3" defer></script>
+  <!-- Scripts: include each file ONCE, in dependency order (NO defer) -->
+  <script src="./JS/Scale.js?v=3"></script>
+  <script src="./JS/PointsHandler.js?v=3"></script>
+  <script src="./JS/DucksHandler.js?v=3"></script>
+  <script src="./JS/Duck.js?v=3"></script>
+  <script src="./JS/View.js?v=3"></script>
+  <script src="./JS/ShotHandler.js?v=3"></script>
+  <script src="./JS/Dog.js?v=3"></script>
+  <script src="./JS/Game.js?v=3"></script>
+  <script src="./JS/StartScreen.js?v=3"></script>
 
   <!-- Boot intro -->
-  <script src="JS/BootIntro.js" defer onerror="console.warn('BootIntro.js failed to load (non-fatal)')"></script>
+  <script src="./JS/BootIntro.js?v=3"></script>
+
+  <!-- App entry MUST be last -->
+  <script src="./JS/Application.js?v=3"></script>
+
 
   <!-- If BootIntro never reveals the start screen, show it after a short delay -->
   <script>
