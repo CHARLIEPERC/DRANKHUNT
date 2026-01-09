@@ -1,14 +1,13 @@
 <!doctype html>
 <html>
 <head>
-  <!-- index.html — add near the top, before other script tags -->
+<!-- add this at the top of <head>, before other scripts -->
 <script>
-  // Ensure bare references to `duckElevPx` don't throw.
-  // This is a minimal, safe fallback. It does not change gameplay; if the real
-  // value is later set, it will overwrite this default.
+  // Minimal safe fallback so bare references to `duckElevPx` don't throw.
   if (typeof duckElevPx === 'undefined') {
     var duckElevPx = 0;
   }
+</script>
 </script>
   
   <meta charset="utf-8" />
