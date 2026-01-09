@@ -9,7 +9,6 @@ function launchApplication() {
       console.error("StartScreen is not loaded. Check index.html script order.");
       return;
     }
-    startScreen = new StartScreen();
   }
 
   // Menu music behavior (guarded)
