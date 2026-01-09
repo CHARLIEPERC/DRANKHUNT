@@ -128,7 +128,7 @@
 
     // Run animation immediately (no click required)
     let step = 0;
-    const steps = 180;     // more steps = slower
+    const steps = 160;     // more steps = slower
     const tickMs = 45;    // slower speed
 
     const interval = setInterval(() => {
