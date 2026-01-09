@@ -13,13 +13,20 @@
   <link rel="stylesheet" href="CSS/styles.css?v=3">
   <link rel="stylesheet" href="CSS/bar.css?v=2">
   <link rel="stylesheet" href="CSS/overlays.css?v=2">
-  <link rel="stylesheet" href="CSS/startScreen.css?v=3"><!-- bump to bust cache -->
+  <link rel="stylesheet" href="CSS/startScreen.css?v=3">
 
-  <!-- 🚑 EARLY GLOBAL FALLBACK (MUST BE FIRST SCRIPT) -->
+  <!-- Early global fallbacks -->
   <script>
     // Prevent ReferenceError before Duck.js computes the real value
     window.duckElevPx = 0;
     var duckElevPx = window.duckElevPx;
+
+    // Stub so START never fails silently if Application.js is cached/broken.
+    // Application.js should overwrite this with the real function.
+    window.launchApplication = window.launchApplication || function () {
+      console.error("launchApplication is not loaded yet. Application.js may be cached or failing to load.");
+      alert("Game did not start. Open DevTools Console and show the errors in red.");
+    };
   </script>
 
   <!-- jQuery -->
@@ -30,7 +37,6 @@
 </head>
 
 <body>
-  <!-- Game wrapper: fixed design size, scaled to fit viewport via JS -->
   <div id="gameWrap">
 
     <!-- Start screen (hidden until BootIntro finishes) -->
@@ -47,7 +53,7 @@
         />
 
         <!-- Start button -->
-        <div class="startScreen__content__box startScreen__startBtn" onclick="launchApplication()">
+        <div class="startScreen__content__box startScreen__startBtn" onclick="window.launchApplication()">
           <h2 id="startButton">START</h2>
         </div>
 
@@ -107,7 +113,7 @@
       <h3 id="levelBoxP">LEVEL</h3>
     </div>
 
-    <!-- IMPORTANT: start hidden so it doesn't block the Start Screen -->
+    <!-- Start hidden so it does not block the start screen -->
     <div id="shootBlocker" style="display:none;"></div>
 
     <div id="overlay">
@@ -134,7 +140,7 @@
 
   </div>
 
-  <!-- Scripts: include each file ONCE, in dependency order -->
+  <!-- Scripts: include each file once, dependency order -->
   <script src="JS/Scale.js" defer></script>
   <script src="JS/PointsHandler.js?v=2" defer></script>
   <script src="JS/DucksHandler.js?v=2" defer></script>
@@ -143,24 +149,24 @@
   <script src="JS/ShotHandler.js?v=2" defer></script>
   <script src="JS/Dog.js?v=2" defer></script>
   <script src="JS/Game.js?v=2" defer></script>
-  <script src="JS/StartScreen.js?v=3" defer></script><!-- bump to bust cache -->
+  <script src="JS/StartScreen.js?v=3" defer></script>
 
   <!-- Boot intro -->
   <script src="JS/BootIntro.js" defer onerror="console.warn('BootIntro.js failed to load (non-fatal)')"></script>
 
-  <!-- Fallback: if BootIntro never reveals the start screen, show it after a short delay -->
+  <!-- If BootIntro never reveals the start screen, show it after a short delay -->
   <script>
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const el = document.getElementById('startScreen');
-        if (el && el.classList.contains('is-hidden')) {
-          el.classList.remove('is-hidden');
+    window.addEventListener("load", function () {
+      setTimeout(function () {
+        var el = document.getElementById("startScreen");
+        if (el && el.classList.contains("is-hidden")) {
+          el.classList.remove("is-hidden");
         }
       }, 2500);
     });
   </script>
 
-  <!-- App entry -->
-  <script src="JS/Application.js?v=3" defer></script>
+  <!-- App entry (BUST CACHE HARD) -->
+  <script src="JS/Application.js?v=999" defer></script>
 </body>
 </html>
