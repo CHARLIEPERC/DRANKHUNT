@@ -1,152 +1,130 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Duck Hunt 2.0</title>
+  <meta charset="utf-8" />
+  <title>Duck Hunt 2.0</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="resources/sprites/duck/png/right1.png" />
+  <link rel="shortcut icon" type="image/x-icon" href="resources/sprites/duck/png/right1.png" />
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <!-- local CSS (NO ../) -->
-    <link rel="stylesheet" href="CSS/styles.css?v=3">
-    <link rel="stylesheet" href="CSS/bar.css?v=2">
-    <link rel="stylesheet" href="CSS/overlays.css?v=2">
-    <link rel="stylesheet" href="CSS/startScreen.css?v=2">
+  <!-- local CSS (NO ../) -->
+  <link rel="stylesheet" href="CSS/styles.css?v=3">
+  <link rel="stylesheet" href="CSS/bar.css?v=2">
+  <link rel="stylesheet" href="CSS/overlays.css?v=2">
+  <link rel="stylesheet" href="CSS/startScreen.css?v=2">
 
-    <!-- local jQuery (NO ../) -->
-    <script src="JS/JQuery/jquery-3.3.1.js"></script>
+  <!-- local jQuery (NO ../) -->
+  <script src="JS/JQuery/jquery-3.3.1.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <!-- bootstrap js AFTER jquery -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- bootstrap js AFTER jquery -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    <!-- Game wrapper: fixed design size, scaled to fit viewport via JS -->
-    <div id="gameWrap">
-        <div id="startScreen" class="is-hidden"></div>
-            <div class="startScreen__content">
-                <br><br>
-                <div class="startScreen__content__box" onclick="launchApplication()">
-                    <h2 id="startButton">START GAME</h2>
-                </div>
-                <div class="startScreen__content__box" id="modeSelect">
-                    <div class="arrow" id="prevMode">⏴</div>
-                    <div class="selection">CLASSIC</div>
-                    <div class="arrow" id="nextMode">⏵</div>
-                </div>
-            </div>
+  <!-- Game wrapper: fixed design size, scaled to fit viewport via JS -->
+  <div id="gameWrap">
+
+    <!-- Start screen -->
+    <div id="startScreen" class="is-hidden">
+      <div class="startScreen__content">
+        <br><br>
+        <div class="startScreen__content__box" onclick="launchApplication()">
+          <h2 id="startButton">START GAME</h2>
         </div>
-
-        <div id="sky" class="sky">
-            <div class="comboMessage"></div>
-
-            <div id="pointsCounter">
-                <h2 id="levelCount">1</h2>
-            </div>
-
-            <div class="bushes">
-                <div class="barRow">
-                    <div class="rowCell ammunitionCell" id="shots">
-                        <div class="ammunitionCell__info">
-                            <h2 id="ammunitionAmmount">0</h2>
-                            <h2>SHOT</h2>
-                        </div>
-                        <div class="ammunitionCell__gunIcon">
-                            <img id="gunIcon" src="resources/sprites/weapons/gun.png" alt="">
-                        </div>
-                    </div>
-
-                    <div class="rowCell" id="hit" style="width:40%;">
-                        <div class="lifesIcons">
-                            <img id="life1" src="resources/sprites/scoreImages/life.png" alt="">
-                            <img id="life2" src="resources/sprites/scoreImages/life.png" alt="">
-                            <img id="life3" src="resources/sprites/scoreImages/life.png" alt="">
-                        </div>
-                        <div class="progress">
-                            <div id="roundProgress" class="progress-bar progress-bar-striped active" role="progressbar"
-                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                                0%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rowCell scoreCell" id="score">
-                        <h2 id="scoreCount">0</h2>
-                        <h2>SCORE</h2>
-                    </div>
-                </div>
-            </div>
+        <div class="startScreen__content__box" id="modeSelect">
+          <div class="arrow" id="prevMode">⏴</div>
+          <div class="selection">CLASSIC</div>
+          <div class="arrow" id="nextMode">⏵</div>
         </div>
-
-        <div id="levelBox">
-            <h3 id="levelBoxP">LEVEL</h3>
-        </div>
-
-        <div id="shootBlocker"></div>
-
-        <div id="overlay">
-            <div class="resultsBox">
-                <h3 style="color:rgb(0, 225, 255)">Game Over!</h3>
-                <table>
-                    <tr><td>YOUR POINTS</td><td id="pointsSummary"></td></tr>
-                    <tr><td>ROUND</td><td id="roundSummary"></td></tr>
-                    <tr><td>SUCCESSFUL SHOTS</td><td id="shotsSummary"></td></tr>
-                    <tr><td>ACCURACY</td><td id="accuracySummary"></td></tr>
-                </table>
-
-                <h3 id="playAgainButton" class="cursorChange" onClick="window.location.reload()">PLAY AGAIN</h3>
-            </div>
-        </div>
-
-        <div id="winOverlay">
-            <div class="resultsBox">
-                <h3 style="color:rgb(0, 225, 255)">CONGRATULATIONS — YOU WON A FREE SHIRT</h3>
-                <h3>Promo code: DRANKHUNT139</h3>
-                <h3 id="playAgainButton" class="cursorChange" onClick="window.location.reload()">PLAY AGAIN</h3>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- scaling helper -->
-    <script src="JS/Scale.js" defer></script>
+    <div id="sky" class="sky">
+      <div class="comboMessage"></div>
 
-    <!-- local JS (NO ../) -->
-    <script src="JS/PointsHandler.js?v=2" defer></script>
-    <script src="JS/DucksHandler.js?v=2" defer></script>
-    <script src="JS/Duck.js?v=2" defer></script>
-    <script src="JS/View.js?v=2" defer></script>
-    <script src="JS/ShotHandler.js?v=2" defer></script>
-    <script src="JS/Dog.js?v=2" defer></script>
-    <script src="JS/Game.js?v=2" defer></script>
-    <script src="JS/StartScreen.js?v=2" defer></script>
-    <script src="JS/BootIntro.js"></script>
-    <script src="JS/Application.js"></script>
+      <div id="pointsCounter">
+        <h2 id="levelCount">1</h2>
+      </div>
 
-<!-- Boot intro (non-fatal if missing) -->
-<script src="JS/BootIntro.js" defer onerror="console.warn('BootIntro.js failed to load (non-fatal)')"></script>
+      <div class="bushes">
+        <div class="barRow">
+          <div class="rowCell ammunitionCell" id="shots">
+            <div class="ammunitionCell__info">
+              <h2 id="ammunitionAmmount">0</h2>
+              <h2>SHOT</h2>
+            </div>
+            <div class="ammunitionCell__gunIcon">
+              <img id="gunIcon" src="resources/sprites/weapons/gun.png" alt="">
+            </div>
+          </div>
 
-<!-- scaling helper -->
-<script src="JS/Scale.js" defer></script>
+          <div class="rowCell" id="hit" style="width:40%;">
+            <div class="lifesIcons">
+              <img id="life1" src="resources/sprites/scoreImages/life.png" alt="">
+              <img id="life2" src="resources/sprites/scoreImages/life.png" alt="">
+              <img id="life3" src="resources/sprites/scoreImages/life.png" alt="">
+            </div>
+            <div class="progress">
+              <div id="roundProgress" class="progress-bar progress-bar-striped active" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                0%
+              </div>
+            </div>
+          </div>
 
-<!-- local JS (dependency order, only ONCE each) -->
-<script src="JS/PointsHandler.js?v=2" defer></script>
-<script src="JS/DucksHandler.js?v=2" defer></script>
-<script src="JS/Duck.js?v=2" defer></script>
-<script src="JS/View.js?v=2" defer></script>
-<script src="JS/ShotHandler.js?v=2" defer></script>
+          <div class="rowCell scoreCell" id="score">
+            <h2 id="scoreCount">0</h2>
+            <h2>SCORE</h2>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- Dog must load before Game -->
-<script src="JS/Dog.js?v=2" defer></script>
-<script src="JS/Game.js?v=2" defer></script>
+    <div id="levelBox">
+      <h3 id="levelBoxP">LEVEL</h3>
+    </div>
 
-<!-- StartScreen must load before Application -->
-<script src="JS/StartScreen.js?v=2" defer></script>
-<script src="JS/Application.js?v=2" defer></script>
+    <div id="shootBlocker"></div>
 
+    <div id="overlay">
+      <div class="resultsBox">
+        <h3 style="color:rgb(0, 225, 255)">Game Over!</h3>
+        <table>
+          <tr><td>YOUR POINTS</td><td id="pointsSummary"></td></tr>
+          <tr><td>ROUND</td><td id="roundSummary"></td></tr>
+          <tr><td>SUCCESSFUL SHOTS</td><td id="shotsSummary"></td></tr>
+          <tr><td>ACCURACY</td><td id="accuracySummary"></td></tr>
+        </table>
 
+        <h3 id="playAgainButton" class="cursorChange" onclick="window.location.reload()">PLAY AGAIN</h3>
+      </div>
+    </div>
+
+    <div id="winOverlay">
+      <div class="resultsBox">
+        <h3 style="color:rgb(0, 225, 255)">CONGRATULATIONS — YOU WON A FREE SHIRT</h3>
+        <h3>Promo code: DRANKHUNT139</h3>
+        <h3 id="playAgainButton" class="cursorChange" onclick="window.location.reload()">PLAY AGAIN</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts: include each file ONCE, in dependency order -->
+  <script src="JS/Scale.js" defer></script>
+  <script src="JS/PointsHandler.js?v=2" defer></script>
+  <script src="JS/DucksHandler.js?v=2" defer></script>
+  <script src="JS/Duck.js?v=2" defer></script>
+  <script src="JS/View.js?v=2" defer></script>
+  <script src="JS/ShotHandler.js?v=2" defer></script>
+  <script src="JS/Dog.js?v=2" defer></script>
+  <script src="JS/Game.js?v=2" defer></script>
+  <script src="JS/StartScreen.js?v=2" defer></script>
+
+  <script src="JS/BootIntro.js" defer onerror="console.warn('BootIntro.js failed to load (non-fatal)')"></script>
+  <script src="JS/Application.js?v=2" defer></script>
 </body>
 </html>
-<script src="JS/Dog.js?v=2" defer></script>
