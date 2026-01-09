@@ -1,6 +1,3 @@
-// Minimal safe helper for possibly-missing global
-const getDuckElevPx = () => (window.duckElevPx ?? 0);
-
 class Game{
 
     constructor(gameParameters){
@@ -169,7 +166,7 @@ class ExtremeGame extends Game{
         this.checkIfRoundIsFinished();
     }
 
-       finishRound(){
+    finishRound(){
         // Ensure auto shooting stops first (Extreme mode specific)
         try { this.stopAutoShooting(); } catch(e) {}
 
@@ -222,7 +219,8 @@ class ClassicGame extends Game{
 }
 
 // Set duck bottom so it's duckElevPx above the top of the grass
-const bottomPx = groundBaselinePx + getDuckElevPx();
+// Use a safe fallback if the global isn't set.
+const bottomPx = groundBaselinePx + (window.duckElevPx ?? 0);
 $(this.duckId).css('bottom', bottomPx + 'px');
 
 // Place duck off-screen horizontally so it flies into view.
