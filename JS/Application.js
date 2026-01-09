@@ -2,7 +2,9 @@
 
 var startScreen = new StartScreen();
 
-function launchApplication() {
+window.launchApplication = function () {
+  ...
+};
   // Read selected mode
   const gameParameters = startScreen.getGameParametersFromUserSelect();
   const mode = gameParameters.modeName;
