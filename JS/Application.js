@@ -51,7 +51,10 @@ function launchApplication() {
   if (window.showBootIntro && typeof window.showBootIntro === "function") {
     window.showBootIntro({
       logoSrc: "resources/sprites/slumpedboy-logo.png",
+      audioSrc: "resources/sounds/boot.mp3",
       onDone: startGameplay
+});
+
     });
   } else {
     startGameplay();
