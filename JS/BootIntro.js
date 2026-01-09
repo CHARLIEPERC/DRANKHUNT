@@ -105,15 +105,21 @@
     sweep.style.mixBlendMode = "multiply";
     sweep.style.opacity = "0";
 
-    // Mask the sweep to the logo pixels so color only appears on the text
-sweep.style.webkitMaskImage = `url(${logoSrc})`;
-sweep.style.webkitMaskRepeat = "no-repeat";
-sweep.style.webkitMaskPosition = "center";
-sweep.style.webkitMaskSize = "contain";
-sweep.style.maskImage = `url(${logoSrc})`;
-sweep.style.maskRepeat = "no-repeat";
-sweep.style.maskPosition = "center";
-sweep.style.maskSize = "contain";
+    // Mask sweep to logo pixels (color only appears on the letters)
+    sweep.style.webkitMaskImage = `url(${logoSrc})`;
+    sweep.style.webkitMaskRepeat = "no-repeat";
+    sweep.style.webkitMaskPosition = "center";
+    sweep.style.webkitMaskSize = "contain";
+    sweep.style.maskImage = `url(${logoSrc})`;
+    sweep.style.maskRepeat = "no-repeat";
+    sweep.style.maskPosition = "center";
+    sweep.style.maskSize = "contain";
+
+// Make colors bright
+sweep.style.opacity = "1";
+sweep.style.filter = "saturate(2.2) contrast(1.15)";
+sweep.style.mixBlendMode = "screen";
+
 
 
     // Start on first user gesture
