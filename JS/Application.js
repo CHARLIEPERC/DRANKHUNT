@@ -3,23 +3,23 @@
 var startScreen = new StartScreen();
 
 function launchApplication() {
-  // Get mode selection from the start screen UI
+  // Read selected mode
   const gameParameters = startScreen.getGameParametersFromUserSelect();
-  const selectedModeName = gameParameters.modeName;
+  const mode = gameParameters.modeName;
 
-  let selectedMode;
-  if (selectedModeName === "EXTREME") {
-    selectedMode = new ExtremeGame(gameParameters);
-  } else if (selectedModeName === "MODERN") {
-    selectedMode = new ModernGame(gameParameters);
+  let game;
+  if (mode === "EXTREME") {
+    game = new ExtremeGame(gameParameters);
+  } else if (mode === "MODERN") {
+    game = new ModernGame(gameParameters);
   } else {
-    selectedMode = new ClassicGame(gameParameters);
+    game = new ClassicGame(gameParameters);
   }
 
-  // Hide start UI and stop menu music
+  // Hide menu + stop menu music
   startScreen.hideStartScreen();
   startScreen.stopMenuMusic();
 
   // Start gameplay
-  selectedMode.startGame();
+  game.startGame();
 }
