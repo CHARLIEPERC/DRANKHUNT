@@ -1,116 +1,95 @@
-/* =========================
-   START SCREEN — FORCE BLACK (NO IMAGE)
-   ========================= */
-
 /* Hide when needed */
-#startScreen.is-hidden,
-.startScreen.is-hidden {
+#startScreen.is-hidden {
   display: none !important;
 }
 
-/* FULLSCREEN overlay */
-#startScreen,
-.startScreen {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 100000 !important;
+/* Full-screen overlay */
+#startScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
 
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  /* IMPORTANT: kill any old background image rules */
-  background: #000 !important;
-  background-image: none !important;
-  background-color: #000 !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  background-size: cover !important;
-
-  text-align: center !important;
-}
-
-/* In case an older ::before overlay exists, disable it */
-#startScreen::before,
-.startScreen::before {
-  content: none !important;
-  display: none !important;
+  background: #000; /* BLACK SCREEN */
 }
 
 /* Content container */
 .startScreen__content {
-  position: relative !important;
-  z-index: 1 !important;
+  position: relative;
+  z-index: 1;
 
-  width: 100% !important;
-  max-width: 390px !important;
-  padding: 24px !important;
+  width: 100%;
+  max-width: 390px;
+  padding: 20px;
 
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 22px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+
+  text-align: center;
 }
 
-/* BIGGER logo */
+/* BIGGER DRANKHUNT logo */
 .startScreen__logo {
-  width: 360px !important;
-  max-width: 92vw !important;
-  height: auto !important;
-
-  image-rendering: pixelated !important;
-  pointer-events: none !important;
+  width: 340px;        /* bigger */
+  max-width: 92vw;     /* fits phones */
+  height: auto;
+  image-rendering: pixelated;
+  pointer-events: none;
 }
 
 /* Start button */
 #startButton {
-  font-size: 40px !important;
-  color: red !important;
-  letter-spacing: 2px !important;
-  user-select: none !important;
-  transition: 0.25s ease !important;
+  font-size: 36px;
+  color: red;
+  letter-spacing: 1px;
+  user-select: none;
+  transition: 0.25s ease;
 }
 
 #startButton:hover {
-  letter-spacing: 8px !important;
-  color: rgb(0, 215, 253) !important;
-  cursor: pointer !important;
+  letter-spacing: 6px;
+  color: rgb(0, 215, 253);
+  cursor: pointer;
 }
 
 /* Mode selector */
 #modeSelect {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 20px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
 }
 
 .selection {
-  font-size: 28px !important;
-  color: yellow !important;
-  min-width: 150px !important;
-  user-select: none !important;
+  font-size: 26px;
+  color: yellow;
+  min-width: 140px;
+  user-select: none;
 }
 
 .arrow {
-  font-size: 40px !important;
-  color: blue !important;
-  transition: 0.2s ease !important;
-  user-select: none !important;
+  font-size: 38px;
+  color: blue;
+  transition: 0.2s ease;
+  user-select: none;
 }
 
 .arrow:hover {
-  color: red !important;
-  cursor: pointer !important;
+  color: red;
+  cursor: pointer;
 }
 
 /* Footer */
 #startScreenFooter {
-  position: absolute !important;
-  bottom: 14px !important;
-  width: 100% !important;
-  font-size: 12px !important;
-  color: rgba(255,255,255,0.6) !important;
-  text-align: center !important;
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  text-align: center;
 }
-
