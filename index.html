@@ -1,6 +1,12 @@
 <!doctype html>
 <html>
 <head>
+  <script>
+  // Prevent ReferenceError if any script uses duckElevPx before it's computed.
+  window.duckElevPx = window.duckElevPx ?? 340;
+  var duckElevPx = window.duckElevPx;
+</script>
+  
 <!-- add this at the top of <head>, before other scripts -->
 <script>
   // Minimal safe fallback so bare references to `duckElevPx` don't throw.
