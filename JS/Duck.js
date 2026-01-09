@@ -78,6 +78,9 @@ startFlight() {
     // Measure the actual .bushes element height to compute the ground baseline in pixels
     const bushes = document.querySelector('.bushes');
     const groundBaselinePx = bushes ? bushes.getBoundingClientRect().height : 340;
+    window.duckElevPx = groundBaselinePx;
+duckElevPx = window.duckElevPx; // keeps the var binding in sync too
+
     
     // Set the CSS custom property so CSS and other JS can use the measured pixel value
     document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
