@@ -112,4 +112,19 @@
   }
 
   window.showBootIntro = showBootIntro;
+
+  window.addEventListener("DOMContentLoaded", () => {
+  const ss = document.getElementById("startScreen");
+  if (ss) ss.classList.add("is-hidden");
+
+  // show Slumpedboy boot first
+  window.showBootIntro({
+    logoSrc: "resources/sprites/slumpedboy-logo.png",
+    audioSrc: "resources/sounds/boot.mp3",
+    onDone: () => {
+      if (ss) ss.classList.remove("is-hidden");
+    }
+  });
+});
+
 })();
