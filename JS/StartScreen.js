@@ -1,71 +1,79 @@
-class StartScreen{
+class StartScreen {
 
-    constructor(){
-        this.availableModes = new Array();
-        this.currentModeIndex = 0;
-        this.menuMusic = new Audio("/DRANKHUNT/resources/sounds/menu.mp3");
-        this.menuMusic.loop = true;
-        this.menuMusic.volume = 0.3;
-        this.initializeModes();
-        this.initializeButtons();
-        this.displaySettingsForCurrentMode();
+  constructor() {
+    this.availableModes = [];
+    this.currentModeIndex = 0;
 
-        // Attempt to start menu music when the start screen is shown (user agents may block autoplay).
-        // This is safe: play() returns a promise — we swallow rejection to avoid console errors.
-        try { this.playMenuMusic(); } catch(e) { /* ignore */ }
+    this.menuMusic = new Audio("/DRANKHUNT/resources/sounds/menu.mp3");
+    this.menuMusic.loop = true;
+    this.menuMusic.volume = 0.3;
+
+    this.initializeModes();
+    this.initializeButtons();
+    this.displaySettingsForCurrentMode();
+
+    // Try to play menu music (safe if blocked)
+    try {
+      this.playMenuMusic();
+    } catch (e) {}
+  }
+
+  initializeModes() {
+    this.availableModes.push(
+      { name: "CLASSIC", moves: 7, ammunition: 3, ducks: 2 },
+      { name: "MODERN", moves: 6, ammunition: 5, ducks: 3 },
+      { name: "EXTREME", moves: 7, ammunition: 50, ducks: 1 }
+    );
+  }
+
+  initializeButtons() {
+    $("#prevMode").off("click").on("click", () => this.changeMode("prev"));
+    $("#nextMode").off("click").on("click", () => this.changeMode("next"));
+  }
+
+  changeMode(toggle) {
+    if (toggle === "next") {
+      this.currentModeIndex = (this.currentModeIndex + 1) % this.availableModes.length;
+    } else {
+      this.currentModeIndex =
+        (this.currentModeIndex - 1 + this.availableModes.length) % this.availableModes.length;
+    }
+    this.displaySettingsForCurrentMode();
+  }
+
+  displaySettingsForCurrentMode() {
+    const selectedMode = this.availableModes[this.currentModeIndex];
+    $("#modeSelect .selection").html(selectedMode.name);
+  }
+
+  getGameParametersFromUserSelect() {
+    const selectedMode = this.availableModes[this.currentModeIndex];
+    return {
+      modeName: selectedMode.name,
+      ducksNumber: selectedMode.ducks,
+      movesNumber: selectedMode.moves,
+      initialAmmo: selectedMode.ammunition
+    };
+  }
+
+  // 🔑 SAFE FIX: never crash if element is missing
+  hideStartScreen() {
+    const el = document.querySelector(".startScreen");
+
+    if (!el) {
+      console.warn("Start screen element not found, skipping hide.");
+      return;
     }
 
-    initializeModes(){
-        this.availableModes.push(
-            {name:"CLASSIC", moves:7, ammunition:3, ducks:2},
-            {name:"MODERN", moves:6, ammunition:5, ducks:3},
-            {name:"EXTREME", moves:7, ammunition:50, ducks:1}
-        )
-    }
+    el.style.display = "none";
+  }
 
-    initializeButtons(){
-        $("#prevMode").click(()=>this.changeMode("prev"));
-        $("#nextMode").click(()=>this.changeMode("next"));
-    }
+  playMenuMusic() {
+    this.menuMusic.play().catch(() => {});
+  }
 
-    changeMode(togle){
-        if (togle == "next") {
-            if (this.currentModeIndex<2) {
-                this.currentModeIndex++;
-            }else{
-                this.currentModeIndex = 0;
-            }
-        } else {
-            if (this.currentModeIndex >0) {
-                this.currentModeIndex--;
-            }else{
-                this.currentModeIndex = 2;
-            }
-        }
-        this.displaySettingsForCurrentMode();
-    }
-
-    displaySettingsForCurrentMode(){
-        let selectedMode = this.availableModes[this.currentModeIndex];
-        $("#modeSelect .selection").html(selectedMode.name);
-    }
-
-    getGameParametersFromUserSelect(){
-        let selectedMode = this.availableModes[this.currentModeIndex];
-        let gameParameters = {modeName:selectedMode.name, ducksNumber:selectedMode.ducks, movesNumber:selectedMode.moves, initialAmmo:selectedMode.ammunition};
-        return gameParameters;
-    }
-
-    hideStartScreen(){
-        document.getElementById("startScreen").style.display = "none";
-    }
-
-    playMenuMusic(){
-        this.menuMusic.play().catch(()=>{});
-    }
-
-    stopMenuMusic(){
-        this.menuMusic.pause();
-        this.menuMusic.currentTime = 0;
-    }
+  stopMenuMusic() {
+    this.menuMusic.pause();
+    this.menuMusic.currentTime = 0;
+  }
 }
