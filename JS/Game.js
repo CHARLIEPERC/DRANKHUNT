@@ -235,3 +235,7 @@ window.Game = Game;
 if (typeof ClassicGame !== "undefined") window.ClassicGame = ClassicGame;
 if (typeof ModernGame !== "undefined") window.ModernGame = ModernGame;
 if (typeof ExtremeGame !== "undefined") window.ExtremeGame = ExtremeGame;
+
+// expose constructor for Application.js
+window.Game = Game;
+
