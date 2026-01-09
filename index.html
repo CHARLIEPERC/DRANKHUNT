@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="CSS/styles.css?v=3">
   <link rel="stylesheet" href="CSS/bar.css?v=2">
   <link rel="stylesheet" href="CSS/overlays.css?v=2">
-  <link rel="stylesheet" href="CSS/startScreen.css?v=2">
+  <link rel="stylesheet" href="CSS/startScreen.css?v=3"><!-- bump to bust cache -->
 
   <!-- 🚑 EARLY GLOBAL FALLBACK (MUST BE FIRST SCRIPT) -->
   <script>
@@ -33,7 +33,7 @@
   <!-- Game wrapper: fixed design size, scaled to fit viewport via JS -->
   <div id="gameWrap">
 
-    <!-- Start screen (HIDDEN until BootIntro finishes) -->
+    <!-- Start screen (hidden until BootIntro finishes) -->
     <div id="startScreen" class="startScreen is-hidden">
       <div class="startScreen__content">
 
@@ -143,10 +143,22 @@
   <script src="JS/ShotHandler.js?v=2" defer></script>
   <script src="JS/Dog.js?v=2" defer></script>
   <script src="JS/Game.js?v=2" defer></script>
-  <script src="JS/StartScreen.js?v=2" defer></script>
+  <script src="JS/StartScreen.js?v=3" defer></script><!-- bump to bust cache -->
 
   <!-- Boot intro -->
   <script src="JS/BootIntro.js" defer onerror="console.warn('BootIntro.js failed to load (non-fatal)')"></script>
+
+  <!-- Fallback: if BootIntro never reveals the start screen, show it after a short delay -->
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const el = document.getElementById('startScreen');
+        if (el && el.classList.contains('is-hidden')) {
+          el.classList.remove('is-hidden');
+        }
+      }, 2500);
+    });
+  </script>
 
   <!-- App entry -->
   <script src="JS/Application.js?v=3" defer></script>
