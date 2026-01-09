@@ -34,20 +34,33 @@
   <div id="gameWrap">
 
 <!-- Start screen -->
-<div class="startScreen">
+<div class="startScreen" id="startScreen">
   <div class="startScreen__content">
-    <br><br>
-    <div class="startScreen__content__box" onclick="launchApplication()">
-      <h2 id="startButton">START GAME</h2>
+
+    <!-- DRANKHUNT logo -->
+    <img
+      id="drankHuntLogo"
+      class="startScreen__logo"
+      src="resources/sprites/ui/drankhunt-logo.png"
+      alt="DRANKHUNT"
+      draggable="false"
+    />
+
+    <!-- Start button -->
+    <div class="startScreen__content__box startScreen__startBtn" onclick="launchApplication()">
+      <span class="startScreen__startText">START</span>
     </div>
 
+    <!-- Mode select -->
     <div class="startScreen__content__box" id="modeSelect">
       <div class="arrow" id="prevMode">⏴</div>
       <div class="selection">CLASSIC</div>
       <div class="arrow" id="nextMode">⏵</div>
     </div>
+
   </div>
 </div>
+
 
 
     <div id="sky" class="sky">
