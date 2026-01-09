@@ -228,3 +228,10 @@ $(this.duckId).css('bottom', bottomPx + 'px');
 const spawnFromLeft = Math.random() < 0.5;
 const initialLeftPercent = spawnFromLeft ? -10 : 110;
 $(this.duckId).css('left', initialLeftPercent + '%');
+
+// ---- make constructors available globally (required by Application.js) ----
+window.Game = Game;
+
+if (typeof ClassicGame !== "undefined") window.ClassicGame = ClassicGame;
+if (typeof ModernGame !== "undefined") window.ModernGame = ModernGame;
+if (typeof ExtremeGame !== "undefined") window.ExtremeGame = ExtremeGame;
