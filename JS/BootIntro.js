@@ -183,4 +183,19 @@
 
   // expose globally
   window.showBootIntro = showBootIntro;
+
+  // Auto-run boot intro before showing the start screen
+window.addEventListener("DOMContentLoaded", () => {
+  const ss = document.getElementById("startScreen");
+  if (ss) ss.classList.add("is-hidden");
+
+  // Run boot immediately on page load
+  window.showBootIntro({
+    logoSrc: "resources/sprites/slumpedboy-logo.png",
+    onDone: () => {
+      if (ss) ss.classList.remove("is-hidden");
+    }
+  });
+});
+
 })();
