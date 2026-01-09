@@ -53,7 +53,7 @@
 
   function playBootAudio(src) {
   try {
-    const a = new Audio(src);
+    const a = new Audio("resources/sounds/boot.mp3");
     a.volume = 0.9;
     a.currentTime = 0;
     a.play().catch(() => {});
@@ -190,7 +190,6 @@ overlay.addEventListener(
   window.showBootIntro = showBootIntro;
 
   // Auto-run boot intro before showing the start screen
-  window.addEventListener("DOMContentLoaded", () => {
     const ss = document.getElementById("startScreen");
     if (ss) ss.classList.add("is-hidden");
 
