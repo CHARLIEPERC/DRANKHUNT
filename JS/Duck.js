@@ -74,24 +74,27 @@ startFlight() {
     $(this.duckId).stop(true);
   }
 
-  moveToInitialPosition() {
+   moveToInitialPosition() {
     // Measure the actual .bushes element height to compute the ground baseline in pixels
     const bushes = document.querySelector('.bushes');
     const groundBaselinePx = bushes ? bushes.getBoundingClientRect().height : 340;
-    window.duckElevPx = groundBaselinePx;
-duckElevPx = window.duckElevPx; // keeps the var binding in sync too
 
-    
-    // Set the CSS custom property so CSS and other JS can use the measured pixel value
+    // Publish baseline for CSS/other JS
     document.documentElement.style.setProperty('--ground-baseline', `${groundBaselinePx}px`);
-    
-    // Get duck elevation from CSS var
+
+    // Get duck elevation from CSS var (how far above the grass the duck should sit)
     const root = getComputedStyle(document.documentElement);
     const duckElevRaw = root.getPropertyValue('--duck-elev').trim();
-    const duckElevPx = parseInt(duckElevRaw, 10) || 80;
-    
-    // Set duck bottom so it's duckElevPx above the top of the grass
-    const bottomPx = groundBaselinePx + duckElevPx;
+    const elevPx = parseInt(duckElevRaw, 10) || 80;
+
+    // Publish elevation globally for any legacy code that expects duckElevPx
+    window.duckElevPx = elevPx;
+    if (typeof duckElevPx !== 'undefined') {
+      duckElevPx = elevPx; // keep the global var binding in sync (from index.html)
+    }
+
+    // Set duck bottom so it's elevPx above the top of the grass
+    const bottomPx = groundBaselinePx + elevPx;
     $(this.duckId).css('bottom', bottomPx + 'px');
   }
 
