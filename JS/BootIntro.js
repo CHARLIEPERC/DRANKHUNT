@@ -70,7 +70,7 @@
     overlay.style.display = "flex";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
-    overlay.style.background = "#9bbc0f"; // classic green-ish
+    overlay.style.background = "#ffffff"; // pure white background
     overlay.style.imageRendering = "pixelated";
     overlay.style.userSelect = "none";
     overlay.style.touchAction = "manipulation";
@@ -93,7 +93,9 @@
     img.style.maxWidth = "70vw";
     img.style.height = "auto";
     img.style.imageRendering = "pixelated";
-    img.style.opacity = "0.15";
+    img.style.opacity = "1";       // logo visible immediately
+    img.style.filter = "grayscale(100%)"; // start monochrome like original
+
 
     // Color sweep overlay (stepped bands)
     const sweep = el("div", {}, logoWrap);
