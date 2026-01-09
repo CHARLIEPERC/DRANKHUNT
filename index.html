@@ -1,49 +1,31 @@
 <!doctype html>
 <html>
-  <head>
-  <script>
-    window.duckElevPx = window.duckElevPx ?? 340;
-    var duckElevPx = window.duckElevPx;
-  </script>
-
-  <script src="JS/StartScreen.js"></script>
-  <script src="JS/Application.js"></script>
-  ...
 <head>
-  <script>
-  // Prevent ReferenceError if any script uses duckElevPx before it's computed.
-  window.duckElevPx = window.duckElevPx ?? 340;
-  var duckElevPx = window.duckElevPx;
-</script>
-  
-<!-- add this at the top of <head>, before other scripts -->
-<script>
-  // Minimal safe fallback so bare references to `duckElevPx` don't throw.
-  if (typeof duckElevPx === 'undefined') {
-    var duckElevPx = 0;
-  }
-</script>
-</script>
-  
   <meta charset="utf-8" />
   <title>Duck Hunt 2.0</title>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
   <link rel="shortcut icon" type="image/x-icon" href="resources/sprites/duck/png/right1.png" />
 
+  <!-- CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-  <!-- local CSS (NO ../) -->
   <link rel="stylesheet" href="CSS/styles.css?v=3">
   <link rel="stylesheet" href="CSS/bar.css?v=2">
   <link rel="stylesheet" href="CSS/overlays.css?v=2">
   <link rel="stylesheet" href="CSS/startScreen.css?v=2">
 
-  <!-- local jQuery (NO ../) -->
+  <!-- 🚑 EARLY GLOBAL FALLBACK (MUST BE FIRST SCRIPT) -->
+  <script>
+    // Prevent ReferenceError before Duck.js computes the real value
+    window.duckElevPx = 0;
+    var duckElevPx = window.duckElevPx;
+  </script>
+
+  <!-- jQuery -->
   <script src="JS/JQuery/jquery-3.3.1.js"></script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <!-- bootstrap js AFTER jquery -->
+  <!-- Bootstrap JS (after jQuery) -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
