@@ -138,14 +138,15 @@
 
           // 3-band palette inspired by handheld boot vibes (not exact)
           sweep.style.background = `linear-gradient(
-            to bottom,
-            rgba(20, 40, 120, 0.65) 0%,
-            rgba(20, 40, 120, 0.65) ${Math.max(0, pct - 20)}%,
-            rgba(30, 120, 60, 0.65) ${Math.max(0, pct - 10)}%,
-            rgba(30, 120, 60, 0.65) ${Math.max(0, pct + 10)}%,
-            rgba(160, 60, 140, 0.65) ${Math.max(0, pct)}%,
-            rgba(160, 60, 140, 0.65) 100%
-          )`;
+  to bottom,
+  rgba(255, 0, 0, 0.75) ${Math.max(0, pct - 25)}%,
+  rgba(255, 165, 0, 0.75) ${Math.max(0, pct - 15)}%,
+  rgba(255, 255, 0, 0.75) ${Math.max(0, pct - 5)}%,
+  rgba(0, 200, 0, 0.75) ${Math.max(0, pct + 5)}%,
+  rgba(0, 120, 255, 0.75) ${Math.max(0, pct + 15)}%,
+  rgba(180, 0, 255, 0.75) ${Math.max(0, pct + 25)}%
+)`;
+
 
           if (step >= steps) {
             clearInterval(interval);
@@ -155,6 +156,8 @@
             flicker.style.opacity = "0";
             sweep.style.opacity = "0";
             img.style.opacity = "1";
+            img.style.filter = "none"; // return to solid logo
+
 
             // brief pause then remove
             setTimeout(() => {
@@ -162,7 +165,7 @@
               onDone && onDone();
             }, 140);
           }
-        }, 38);
+        }, 28);
       },
       { once: true }
     );
