@@ -15,10 +15,10 @@ function launchApplication() {
         selectedMode = new ClassicGame(gameParameters);
     }
 
-    startScreen.hideStartScreen();
+startScreen.hideStartScreen();
+startScreen.stopMenuMusic();
 
-    // ✅ STOP menu music exactly when gameplay begins
-    startScreen.stopMenuMusic();
-
-    selectedMode.startGame();
-}
+window.showBootIntro({
+  logoSrc: "resources/images/slumpedboy-logo.png", // <-- change to your real path
+  onDone: () => selectedMode.startGame()
+});
